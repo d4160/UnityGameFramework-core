@@ -4,8 +4,8 @@ using d4160.MonoBehaviours;
 #if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
 #endif
-using UltEvents;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace d4160.Instancers
 {
@@ -14,31 +14,38 @@ namespace d4160.Instancers
         [SerializeField] private Transform _instancesParent;
 
         [Header("EVENTS")]
-        [SerializeField] private UltEvent<Component> _onInstanced;
-        [SerializeField] private UltEvent<Component> _onDestroy;
+        [SerializeField] private UnityEvent<Component> _onInstanced;
+        [SerializeField] private UnityEvent<Component> _onDestroy;
 
-        void OnEnable() {
-            if (_data) {
+        void OnEnable()
+        {
+            if (_data)
+            {
                 _data.RegisterEvents();
                 _data.OnInstanced += _onInstanced.Invoke;
                 _data.OnDestroy += _onDestroy.Invoke;
             }
         }
 
-        void OnDisable() {
-            if (_data) {
+        void OnDisable()
+        {
+            if (_data)
+            {
                 _data.UnregisterEvents();
                 _data.OnInstanced -= _onInstanced.Invoke;
                 _data.OnDestroy -= _onDestroy.Invoke;
             }
         }
 
-        void Start() {
+        void Start()
+        {
             Setup();
         }
 
-        public void Setup(){
-            if (_data) {
+        public void Setup()
+        {
+            if (_data)
+            {
                 _data.Parent = _instancesParent;
                 _data.Setup();
             }
@@ -47,7 +54,8 @@ namespace d4160.Instancers
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public Component Instantiate() {
+        public Component Instantiate()
+        {
             if (_data) return _data.Instantiate(); return null;
         }
 
@@ -56,7 +64,8 @@ namespace d4160.Instancers
             if (_data) return _data.Instantiate() as T; return null;
         }
 
-        public void Destroy(Component instance) {
+        public void Destroy(Component instance)
+        {
             if (_data) _data.Destroy(instance);
         }
 

@@ -1,7 +1,7 @@
 #if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
-using System;
 #endif
+using System;
 using UnityEngine;
 
 namespace d4160.Variables
@@ -56,13 +56,13 @@ namespace d4160.Variables
         [SerializeField] protected TVarSO _variable;
 
         public TVarSO Variable => _variable;
-        public T Value 
-        { 
+        public T Value
+        {
             get => _useConstant ? _constantValue : (Type.GetTypeCode(typeof(T)) == TypeCode.String ? (T)(object)_variable.StringValue : (T)_variable.RawValue);
             set { if (_useConstant) _constantValue = value; else _variable.RawValue = value; }
         }
-        public string StringValue 
-        { 
+        public string StringValue
+        {
             get => _useConstant ? _constantValue.ToString() : _variable.StringValue;
             set { if (_useConstant) ParseConstantValue(value); else _variable.StringValue = value; }
         }
