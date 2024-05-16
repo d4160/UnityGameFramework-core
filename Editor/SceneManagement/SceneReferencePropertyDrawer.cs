@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace d4160.SceneManagement.Editor
 {
-    [CustomPropertyDrawer(typeof(SceneReference))]
+    //[CustomPropertyDrawer(typeof(SceneReference))]
     public class SceneReferencePropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
