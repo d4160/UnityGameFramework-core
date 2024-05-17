@@ -1,0 +1,21 @@
+{
+    "name": "d4160.Runtime.UGS.Authentication.GameCreator",
+    "rootNamespace": "",
+    "references": [
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320",
+        "GUID:3469be48c3821c14f8df98f1d403e53e",
+        "GUID:ce8498d5afaa3044fb7a89a847fae5ab",
+        "GUID:fe25561d224ed4743af4c60938a59d0b",
+        "GUID:5540e30183c82e84b954c033c388e06c",
+        "GUID:b4fcd334f7f6d7f4aa3b890f586647bd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
