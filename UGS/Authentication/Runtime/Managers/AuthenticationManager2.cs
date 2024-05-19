@@ -17,6 +17,7 @@ namespace d4160.Runtime.UGS.Authentication
         public event Action OnInvalidUsernameOrPassword;
         public event Action OnPasswordDoesNotMatchRequirements;
         public event Action OnUsernameAlreadyExists;
+        public event Action OnSignedInFailed;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void OnSubsystemsInit()
@@ -32,22 +33,22 @@ namespace d4160.Runtime.UGS.Authentication
             {
                 _ = WaitUntilUnityServicesInitialized(() =>
                 {
-                    AuthenticationService.Instance.SignInFailed += OnSignedInFailed;
+                    AuthenticationService.Instance.SignInFailed += OnSignedInFailedCallback;
                 });
             }
             else
             {
-                AuthenticationService.Instance.SignInFailed += OnSignedInFailed;
+                AuthenticationService.Instance.SignInFailed += OnSignedInFailedCallback;
             }
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            AuthenticationService.Instance.SignInFailed -= OnSignedInFailed;
+            AuthenticationService.Instance.SignInFailed -= OnSignedInFailedCallback;
         }
 
-        protected virtual void OnSignedInFailed(RequestFailedException exception)
+        protected virtual void OnSignedInFailedCallback(RequestFailedException exception)
         {
             switch (exception.Message)
             {
@@ -55,6 +56,8 @@ namespace d4160.Runtime.UGS.Authentication
                     OnUsernameAlreadyExists?.Invoke();
                     break;
             }
+
+            OnSignedInFailed?.Invoke();
         }
 
         protected async Task WaitUntilUnityServicesInitialized(Action callback)

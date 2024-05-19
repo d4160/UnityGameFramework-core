@@ -1,4 +1,4 @@
-﻿using GameCreator.Runtime.Common;
+using GameCreator.Runtime.Common;
 using GameCreator.Runtime.VisualScripting;
 using MiTschMR.Runtime.EasyUGS.Authentication;
 using System;
@@ -41,7 +41,6 @@ namespace d4160.Runtime.UGS.Authentication
             }
             catch (RequestFailedException exception)
             {
-                Debug.Log($"RequestFailed: {exception.Message}");
                 AuthenticationManager2.Instance.InvokeRequestException(exception);
             }
         }
