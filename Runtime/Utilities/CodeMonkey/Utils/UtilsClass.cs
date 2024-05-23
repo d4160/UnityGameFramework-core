@@ -15,32 +15,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
-namespace CodeMonkey.Utils {
+namespace CodeMonkey.Utils
+{
 
     /*
      * Various assorted utilities functions
      * */
-    public static class UtilsClass {
-        
+    public static class UtilsClass
+    {
+
         private static readonly Vector3 Vector3zero = Vector3.zero;
         private static readonly Vector3 Vector3one = Vector3.one;
-        private static readonly Vector3 Vector3yDown = new Vector3(0,-1);
+        private static readonly Vector3 Vector3yDown = new Vector3(0, -1);
 
         public const int sortingOrderDefault = 5000;
-        
+
         // Get Sorting order to set SpriteRenderer sortingOrder, higher position = lower sortingOrder
-        public static int GetSortingOrder(Vector3 position, int offset, int baseSortingOrder = sortingOrderDefault) {
+        public static int GetSortingOrder(Vector3 position, int offset, int baseSortingOrder = sortingOrderDefault)
+        {
             return (int)(baseSortingOrder - position.y) + offset;
         }
 
 
         // Get Main Canvas Transform
         private static Transform cachedCanvasTransform;
-        public static Transform GetCanvasTransform() {
-            if (cachedCanvasTransform == null) {
+        public static Transform GetCanvasTransform()
+        {
+            if (cachedCanvasTransform == null)
+            {
                 Canvas canvas = MonoBehaviour.FindObjectOfType<Canvas>();
-                if (canvas != null) {
+                if (canvas != null)
+                {
                     cachedCanvasTransform = canvas.transform;
                 }
             }
@@ -48,18 +55,21 @@ namespace CodeMonkey.Utils {
         }
 
         // Get Default Unity Font, used in text objects if no font given
-        public static Font GetDefaultFont() {
+        public static Font GetDefaultFont()
+        {
             return Resources.GetBuiltinResource<Font>("Arial.ttf");
         }
 
 
         // Create a Sprite in the World, no parent
-        public static GameObject CreateWorldSprite(string name, Sprite sprite, Vector3 position, Vector3 localScale, int sortingOrder, Color color) {
+        public static GameObject CreateWorldSprite(string name, Sprite sprite, Vector3 position, Vector3 localScale, int sortingOrder, Color color)
+        {
             return CreateWorldSprite(null, name, sprite, position, localScale, sortingOrder, color);
         }
-        
+
         // Create a Sprite in the World
-        public static GameObject CreateWorldSprite(Transform parent, string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color) {
+        public static GameObject CreateWorldSprite(Transform parent, string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color)
+        {
             GameObject gameObject = new GameObject(name, typeof(SpriteRenderer));
             Transform transform = gameObject.transform;
             transform.SetParent(parent, false);
@@ -73,12 +83,14 @@ namespace CodeMonkey.Utils {
         }
 
         // Create a Sprite in the World with Button_Sprite, no parent
-        public static Button_Sprite CreateWorldSpriteButton(string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color) {
+        public static Button_Sprite CreateWorldSpriteButton(string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color)
+        {
             return CreateWorldSpriteButton(null, name, sprite, localPosition, localScale, sortingOrder, color);
         }
 
         // Create a Sprite in the World with Button_Sprite
-        public static Button_Sprite CreateWorldSpriteButton(Transform parent, string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color) {
+        public static Button_Sprite CreateWorldSpriteButton(Transform parent, string name, Sprite sprite, Vector3 localPosition, Vector3 localScale, int sortingOrder, Color color)
+        {
             GameObject gameObject = CreateWorldSprite(parent, name, sprite, localPosition, localScale, sortingOrder, color);
             gameObject.AddComponent<BoxCollider2D>();
             Button_Sprite buttonSprite = gameObject.AddComponent<Button_Sprite>();
@@ -86,22 +98,26 @@ namespace CodeMonkey.Utils {
         }
 
         // Creates a Text Mesh in the World and constantly updates it
-        public static FunctionUpdater CreateWorldTextUpdater(Func<string> GetTextFunc, Vector3 localPosition, Transform parent = null, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = sortingOrderDefault) {
+        public static FunctionUpdater CreateWorldTextUpdater(Func<string> GetTextFunc, Vector3 localPosition, Transform parent = null, int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = sortingOrderDefault)
+        {
             TextMesh textMesh = CreateWorldText(GetTextFunc(), parent, localPosition, fontSize, color, textAnchor, textAlignment, sortingOrder);
-            return FunctionUpdater.Create(() => {
+            return FunctionUpdater.Create(() =>
+            {
                 textMesh.text = GetTextFunc();
                 return false;
             }, "WorldTextUpdater");
         }
 
         // Create Text in the World
-        public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = sortingOrderDefault) {
+        public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = sortingOrderDefault)
+        {
             if (color == null) color = Color.white;
             return CreateWorldText(parent, text, localPosition, fontSize, (Color)color, textAnchor, textAlignment, sortingOrder);
         }
-        
+
         // Create Text in the World
-        public static TextMesh CreateWorldText(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int sortingOrder) {
+        public static TextMesh CreateWorldText(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int sortingOrder)
+        {
             GameObject gameObject = new GameObject("World_Text", typeof(TextMesh));
             Transform transform = gameObject.transform;
             transform.SetParent(parent, false);
@@ -118,31 +134,39 @@ namespace CodeMonkey.Utils {
 
 
         // Create a Text Popup in the World, no parent
-        public static void CreateWorldTextPopup(string text, Vector3 localPosition, float popupTime = 1f) {
+        public static void CreateWorldTextPopup(string text, Vector3 localPosition, float popupTime = 1f)
+        {
             CreateWorldTextPopup(null, text, localPosition, 40, Color.white, localPosition + new Vector3(0, 20), popupTime);
         }
-        
+
         // Create a Text Popup in the World
-        public static void CreateWorldTextPopup(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, Vector3 finalPopupPosition, float popupTime) {
+        public static void CreateWorldTextPopup(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, Vector3 finalPopupPosition, float popupTime)
+        {
             TextMesh textMesh = CreateWorldText(parent, text, localPosition, fontSize, color, TextAnchor.LowerLeft, TextAlignment.Left, sortingOrderDefault);
             Transform transform = textMesh.transform;
             Vector3 moveAmount = (finalPopupPosition - localPosition) / popupTime;
-            FunctionUpdater.Create(delegate () {
+            FunctionUpdater.Create(delegate ()
+            {
                 transform.position += moveAmount * Time.unscaledDeltaTime;
                 popupTime -= Time.unscaledDeltaTime;
-                if (popupTime <= 0f) {
+                if (popupTime <= 0f)
+                {
                     UnityEngine.Object.Destroy(transform.gameObject);
                     return true;
-                } else {
+                }
+                else
+                {
                     return false;
                 }
             }, "WorldTextPopup");
         }
 
         // Create Text Updater in UI
-        public static FunctionUpdater CreateUITextUpdater(Func<string> GetTextFunc, Vector2 anchoredPosition) {
-            Text text = DrawTextUI(GetTextFunc(), anchoredPosition,  20, GetDefaultFont());
-            return FunctionUpdater.Create(() => {
+        public static FunctionUpdater CreateUITextUpdater(Func<string> GetTextFunc, Vector2 anchoredPosition)
+        {
+            Text text = DrawTextUI(GetTextFunc(), anchoredPosition, 20, GetDefaultFont());
+            return FunctionUpdater.Create(() =>
+            {
                 text.text = GetTextFunc();
                 return false;
             }, "UITextUpdater");
@@ -150,19 +174,22 @@ namespace CodeMonkey.Utils {
 
 
         // Draw a UI Sprite
-        public static RectTransform DrawSprite(Color color, Transform parent, Vector2 pos, Vector2 size, string name = null) {
+        public static RectTransform DrawSprite(Color color, Transform parent, Vector2 pos, Vector2 size, string name = null)
+        {
             RectTransform rectTransform = DrawSprite(null, color, parent, pos, size, name);
             return rectTransform;
         }
-        
+
         // Draw a UI Sprite
-        public static RectTransform DrawSprite(Sprite sprite, Transform parent, Vector2 pos, Vector2 size, string name = null) {
+        public static RectTransform DrawSprite(Sprite sprite, Transform parent, Vector2 pos, Vector2 size, string name = null)
+        {
             RectTransform rectTransform = DrawSprite(sprite, Color.white, parent, pos, size, name);
             return rectTransform;
         }
-        
+
         // Draw a UI Sprite
-        public static RectTransform DrawSprite(Sprite sprite, Color color, Transform parent, Vector2 pos, Vector2 size, string name = null) {
+        public static RectTransform DrawSprite(Sprite sprite, Color color, Transform parent, Vector2 pos, Vector2 size, string name = null)
+        {
             // Setup icon
             if (name == null || name == "") name = "Sprite";
             GameObject go = new GameObject(name, typeof(RectTransform), typeof(Image));
@@ -178,11 +205,13 @@ namespace CodeMonkey.Utils {
             return goRectTransform;
         }
 
-        public static Text DrawTextUI(string textString, Vector2 anchoredPosition, int fontSize, Font font) {
+        public static Text DrawTextUI(string textString, Vector2 anchoredPosition, int fontSize, Font font)
+        {
             return DrawTextUI(textString, GetCanvasTransform(), anchoredPosition, fontSize, font);
         }
 
-        public static Text DrawTextUI(string textString, Transform parent, Vector2 anchoredPosition, int fontSize, Font font) {
+        public static Text DrawTextUI(string textString, Transform parent, Vector2 anchoredPosition, int fontSize, Font font)
+        {
             GameObject textGo = new GameObject("Text", typeof(RectTransform), typeof(Text));
             textGo.transform.SetParent(parent, false);
             Transform textGoTrans = textGo.transform;
@@ -191,7 +220,7 @@ namespace CodeMonkey.Utils {
             textGoTrans.localScale = Vector3one;
 
             RectTransform textGoRectTransform = textGo.GetComponent<RectTransform>();
-            textGoRectTransform.sizeDelta = new Vector2(0,0);
+            textGoRectTransform.sizeDelta = new Vector2(0, 0);
             textGoRectTransform.anchoredPosition = anchoredPosition;
 
             Text text = textGo.GetComponent<Text>();
@@ -208,150 +237,177 @@ namespace CodeMonkey.Utils {
 
 
         // Parse a float, return default if failed
-	    public static float Parse_Float(string txt, float _default) {
-		    float f;
-		    if (!float.TryParse(txt, out f)) {
-			    f = _default;
-		    }
-		    return f;
-	    }
-        
-        // Parse a int, return default if failed
-	    public static int Parse_Int(string txt, int _default) {
-		    int i;
-		    if (!int.TryParse(txt, out i)) {
-			    i = _default;
-		    }
-		    return i;
-	    }
+        public static float Parse_Float(string txt, float _default)
+        {
+            float f;
+            if (!float.TryParse(txt, out f))
+            {
+                f = _default;
+            }
+            return f;
+        }
 
-	    public static int Parse_Int(string txt) {
+        // Parse a int, return default if failed
+        public static int Parse_Int(string txt, int _default)
+        {
+            int i;
+            if (!int.TryParse(txt, out i))
+            {
+                i = _default;
+            }
+            return i;
+        }
+
+        public static int Parse_Int(string txt)
+        {
             return Parse_Int(txt, -1);
-	    }
+        }
 
 
 
         // Get Mouse Position in World with Z = 0f
-        public static Vector3 GetMouseWorldPosition() {
+        public static Vector3 GetMouseWorldPosition()
+        {
             Vector3 vec = GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);
             vec.z = 0f;
             return vec;
         }
 
-        public static Vector3 GetMouseWorldPositionWithZ() {
+        public static Vector3 GetMouseWorldPositionWithZ()
+        {
             return GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);
         }
 
-        public static Vector3 GetMouseWorldPositionWithZ(Camera worldCamera) {
+        public static Vector3 GetMouseWorldPositionWithZ(Camera worldCamera)
+        {
             return GetMouseWorldPositionWithZ(Input.mousePosition, worldCamera);
         }
 
-        public static Vector3 GetMouseWorldPositionWithZ(Vector3 screenPosition, Camera worldCamera) {
+        public static Vector3 GetMouseWorldPositionWithZ(Vector3 screenPosition, Camera worldCamera)
+        {
             Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
             return worldPosition;
         }
 
-        public static Vector3 GetDirToMouse(Vector3 fromPosition) {
+        public static Vector3 GetDirToMouse(Vector3 fromPosition)
+        {
             Vector3 mouseWorldPosition = GetMouseWorldPosition();
             return (mouseWorldPosition - fromPosition).normalized;
         }
 
-        
+
 
         // Is Mouse over a UI Element? Used for ignoring World clicks through UI
-        public static bool IsPointerOverUI() {
+        public static bool IsPointerOverUI()
+        {
             //Debug.Log(EventSystem.current.IsPointerOverGameObject());
-      
+
             // if (EventSystem.current.IsPointerOverGameObject()) {
             //     return true;
             // } else {
-                PointerEventData pe = new PointerEventData(EventSystem.current);
-                pe.position =  Input.mousePosition;
-                List<RaycastResult> hits = new List<RaycastResult>();
-                EventSystem.current.RaycastAll( pe, hits );
-                return hits.Count > 0 && !hits[0].gameObject.GetComponent<Collider>();
+            Mouse mouse = Mouse.current;
+            PointerEventData pe = new PointerEventData(EventSystem.current);
+            pe.position = mouse.position.value;
+            List<RaycastResult> hits = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pe, hits);
+            return hits.Count > 0 && !hits[0].gameObject.GetComponent<Collider>();
             // }
         }
 
 
-        
-		// Returns 00-FF, value 0->255
-	    public static string Dec_to_Hex(int value) {
-		    return value.ToString("X2");
-	    }
 
-		// Returns 0-255
-	    public static int Hex_to_Dec(string hex) {
-		    return Convert.ToInt32(hex, 16);
-	    }
-        
-		// Returns a hex string based on a number between 0->1
-	    public static string Dec01_to_Hex(float value) {
-		    return Dec_to_Hex((int)Mathf.Round(value*255f));
-	    }
+        // Returns 00-FF, value 0->255
+        public static string Dec_to_Hex(int value)
+        {
+            return value.ToString("X2");
+        }
 
-		// Returns a float between 0->1
-	    public static float Hex_to_Dec01(string hex) {
-		    return Hex_to_Dec(hex)/255f;
-	    }
+        // Returns 0-255
+        public static int Hex_to_Dec(string hex)
+        {
+            return Convert.ToInt32(hex, 16);
+        }
+
+        // Returns a hex string based on a number between 0->1
+        public static string Dec01_to_Hex(float value)
+        {
+            return Dec_to_Hex((int)Mathf.Round(value * 255f));
+        }
+
+        // Returns a float between 0->1
+        public static float Hex_to_Dec01(string hex)
+        {
+            return Hex_to_Dec(hex) / 255f;
+        }
 
         // Get Hex Color FF00FF
-	    public static string GetStringFromColor(Color color) {
-		    string red = Dec01_to_Hex(color.r);
-		    string green = Dec01_to_Hex(color.g);
-		    string blue = Dec01_to_Hex(color.b);
-		    return red+green+blue;
-	    }
-        
+        public static string GetStringFromColor(Color color)
+        {
+            string red = Dec01_to_Hex(color.r);
+            string green = Dec01_to_Hex(color.g);
+            string blue = Dec01_to_Hex(color.b);
+            return red + green + blue;
+        }
+
         // Get Hex Color FF00FFAA
-	    public static string GetStringFromColorWithAlpha(Color color) {
-		    string alpha = Dec01_to_Hex(color.a);
-		    return GetStringFromColor(color)+alpha;
-	    }
+        public static string GetStringFromColorWithAlpha(Color color)
+        {
+            string alpha = Dec01_to_Hex(color.a);
+            return GetStringFromColor(color) + alpha;
+        }
 
         // Sets out values to Hex String 'FF'
-	    public static void GetStringFromColor(Color color, out string red, out string green, out string blue, out string alpha) {
-		    red = Dec01_to_Hex(color.r);
-		    green = Dec01_to_Hex(color.g);
-		    blue = Dec01_to_Hex(color.b);
-		    alpha = Dec01_to_Hex(color.a);
-	    }
-        
+        public static void GetStringFromColor(Color color, out string red, out string green, out string blue, out string alpha)
+        {
+            red = Dec01_to_Hex(color.r);
+            green = Dec01_to_Hex(color.g);
+            blue = Dec01_to_Hex(color.b);
+            alpha = Dec01_to_Hex(color.a);
+        }
+
         // Get Hex Color FF00FF
-	    public static string GetStringFromColor(float r, float g, float b) {
-		    string red = Dec01_to_Hex(r);
-		    string green = Dec01_to_Hex(g);
-		    string blue = Dec01_to_Hex(b);
-		    return red+green+blue;
-	    }
-        
+        public static string GetStringFromColor(float r, float g, float b)
+        {
+            string red = Dec01_to_Hex(r);
+            string green = Dec01_to_Hex(g);
+            string blue = Dec01_to_Hex(b);
+            return red + green + blue;
+        }
+
         // Get Hex Color FF00FFAA
-	    public static string GetStringFromColor(float r, float g, float b, float a) {
-		    string alpha = Dec01_to_Hex(a);
-		    return GetStringFromColor(r,g,b)+alpha;
-	    }
-        
+        public static string GetStringFromColor(float r, float g, float b, float a)
+        {
+            string alpha = Dec01_to_Hex(a);
+            return GetStringFromColor(r, g, b) + alpha;
+        }
+
         // Get Color from Hex string FF00FFAA
-	    public static Color GetColorFromString(string color) {
-		    float red = Hex_to_Dec01(color.Substring(0,2));
-		    float green = Hex_to_Dec01(color.Substring(2,2));
-		    float blue = Hex_to_Dec01(color.Substring(4,2));
+        public static Color GetColorFromString(string color)
+        {
+            float red = Hex_to_Dec01(color.Substring(0, 2));
+            float green = Hex_to_Dec01(color.Substring(2, 2));
+            float blue = Hex_to_Dec01(color.Substring(4, 2));
             float alpha = 1f;
-            if (color.Length >= 8) {
+            if (color.Length >= 8)
+            {
                 // Color string contains alpha
-                alpha = Hex_to_Dec01(color.Substring(6,2));
+                alpha = Hex_to_Dec01(color.Substring(6, 2));
             }
-		    return new Color(red, green, blue, alpha);
-	    }
+            return new Color(red, green, blue, alpha);
+        }
 
         // Return a color going from Red to Yellow to Green, like a heat map
-        public static Color GetRedGreenColor(float value) {
+        public static Color GetRedGreenColor(float value)
+        {
             float r = 0f;
             float g = 0f;
-            if (value <= .5f) {
+            if (value <= .5f)
+            {
                 r = 1f;
                 g = value * 2f;
-            } else {
+            }
+            else
+            {
                 g = 1f;
                 r = 1f - (value - .5f) * 2f;
             }
@@ -359,7 +415,8 @@ namespace CodeMonkey.Utils {
         }
 
 
-        public static Color GetRandomColor() {
+        public static Color GetRandomColor()
+        {
             return new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), 1f);
         }
 
@@ -376,50 +433,59 @@ namespace CodeMonkey.Utils {
             GetColorFromString("4756c4"),
         };
 
-        public static void ResetSequencialColors() {
+        public static void ResetSequencialColors()
+        {
             sequencialColorIndex = -1;
         }
 
-        public static Color GetSequencialColor() {
+        public static Color GetSequencialColor()
+        {
             sequencialColorIndex = (sequencialColorIndex + 1) % sequencialColors.Length;
             return sequencialColors[sequencialColorIndex];
         }
 
-        public static Color GetColor255(float red, float green, float blue, float alpha = 255f) {
+        public static Color GetColor255(float red, float green, float blue, float alpha = 255f)
+        {
             return new Color(red / 255f, green / 255f, blue / 255f, alpha / 255f);
         }
 
 
         // Generate random normalized direction
-        public static Vector3 GetRandomDir() {
-            return new Vector3(UnityEngine.Random.Range(-1f,1f), UnityEngine.Random.Range(-1f,1f)).normalized;
+        public static Vector3 GetRandomDir()
+        {
+            return new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized;
         }
 
         // Generate random normalized direction
-        public static Vector3 GetRandomDirXZ() {
+        public static Vector3 GetRandomDirXZ()
+        {
             return new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f)).normalized;
         }
 
 
-        public static Vector3 GetVectorFromAngle(int angle) {
+        public static Vector3 GetVectorFromAngle(int angle)
+        {
             // angle = 0 -> 360
-            float angleRad = angle * (Mathf.PI/180f);
-            return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-        }
-        
-        public static Vector3 GetVectorFromAngle(float angle) {
-            // angle = 0 -> 360
-            float angleRad = angle * (Mathf.PI/180f);
-            return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-        }
-        
-        public static Vector3 GetVectorFromAngleInt(int angle) {
-            // angle = 0 -> 360
-            float angleRad = angle * (Mathf.PI/180f);
+            float angleRad = angle * (Mathf.PI / 180f);
             return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
         }
 
-        public static float GetAngleFromVectorFloat(Vector3 dir) {
+        public static Vector3 GetVectorFromAngle(float angle)
+        {
+            // angle = 0 -> 360
+            float angleRad = angle * (Mathf.PI / 180f);
+            return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+        }
+
+        public static Vector3 GetVectorFromAngleInt(int angle)
+        {
+            // angle = 0 -> 360
+            float angleRad = angle * (Mathf.PI / 180f);
+            return new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+        }
+
+        public static float GetAngleFromVectorFloat(Vector3 dir)
+        {
             dir = dir.normalized;
             float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             if (n < 0) n += 360;
@@ -427,7 +493,8 @@ namespace CodeMonkey.Utils {
             return n;
         }
 
-        public static float GetAngleFromVectorFloatXZ(Vector3 dir) {
+        public static float GetAngleFromVectorFloatXZ(Vector3 dir)
+        {
             dir = dir.normalized;
             float n = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
             if (n < 0) n += 360;
@@ -435,7 +502,8 @@ namespace CodeMonkey.Utils {
             return n;
         }
 
-        public static int GetAngleFromVector(Vector3 dir) {
+        public static int GetAngleFromVector(Vector3 dir)
+        {
             dir = dir.normalized;
             float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             if (n < 0) n += 360;
@@ -444,7 +512,8 @@ namespace CodeMonkey.Utils {
             return angle;
         }
 
-        public static int GetAngleFromVector180(Vector3 dir) {
+        public static int GetAngleFromVector180(Vector3 dir)
+        {
             dir = dir.normalized;
             float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             int angle = Mathf.RoundToInt(n);
@@ -452,129 +521,162 @@ namespace CodeMonkey.Utils {
             return angle;
         }
 
-        public static Vector3 ApplyRotationToVector(Vector3 vec, Vector3 vecRotation) {
+        public static Vector3 ApplyRotationToVector(Vector3 vec, Vector3 vecRotation)
+        {
             return ApplyRotationToVector(vec, GetAngleFromVectorFloat(vecRotation));
         }
 
-        public static Vector3 ApplyRotationToVector(Vector3 vec, float angle) {
+        public static Vector3 ApplyRotationToVector(Vector3 vec, float angle)
+        {
             return Quaternion.Euler(0, 0, angle) * vec;
         }
 
-        public static Vector3 ApplyRotationToVectorXZ(Vector3 vec, float angle) {
+        public static Vector3 ApplyRotationToVectorXZ(Vector3 vec, float angle)
+        {
             return Quaternion.Euler(0, angle, 0) * vec;
         }
 
 
 
-        public static FunctionUpdater CreateMouseDraggingAction(Action<Vector3> onMouseDragging) {
+        public static FunctionUpdater CreateMouseDraggingAction(Action<Vector3> onMouseDragging)
+        {
             return CreateMouseDraggingAction(0, onMouseDragging);
         }
 
-        public static FunctionUpdater CreateMouseDraggingAction(int mouseButton, Action<Vector3> onMouseDragging) {
+        public static FunctionUpdater CreateMouseDraggingAction(int mouseButton, Action<Vector3> onMouseDragging)
+        {
             bool dragging = false;
-            return FunctionUpdater.Create(() => {
-                if (Input.GetMouseButtonDown(mouseButton)) {
+            return FunctionUpdater.Create(() =>
+            {
+                if (Input.GetMouseButtonDown(mouseButton))
+                {
                     dragging = true;
                 }
-                if (Input.GetMouseButtonUp(mouseButton)) {
+                if (Input.GetMouseButtonUp(mouseButton))
+                {
                     dragging = false;
                 }
-                if (dragging) {
+                if (dragging)
+                {
                     onMouseDragging(UtilsClass.GetMouseWorldPosition());
                 }
-                return false; 
+                return false;
             });
         }
 
-        public static FunctionUpdater CreateMouseClickFromToAction(Action<Vector3, Vector3> onMouseClickFromTo, Action<Vector3, Vector3> onWaitingForToPosition) {
+        public static FunctionUpdater CreateMouseClickFromToAction(Action<Vector3, Vector3> onMouseClickFromTo, Action<Vector3, Vector3> onWaitingForToPosition)
+        {
             return CreateMouseClickFromToAction(0, 1, onMouseClickFromTo, onWaitingForToPosition);
         }
 
-        public static FunctionUpdater CreateMouseClickFromToAction(int mouseButton, int cancelMouseButton, Action<Vector3, Vector3> onMouseClickFromTo, Action<Vector3, Vector3> onWaitingForToPosition) {
+        public static FunctionUpdater CreateMouseClickFromToAction(int mouseButton, int cancelMouseButton, Action<Vector3, Vector3> onMouseClickFromTo, Action<Vector3, Vector3> onWaitingForToPosition)
+        {
             int state = 0;
             Vector3 from = Vector3.zero;
-            return FunctionUpdater.Create(() => {
-                if (state == 1) {
+            return FunctionUpdater.Create(() =>
+            {
+                if (state == 1)
+                {
                     if (onWaitingForToPosition != null) onWaitingForToPosition(from, UtilsClass.GetMouseWorldPosition());
                 }
-                if (state == 1 && Input.GetMouseButtonDown(cancelMouseButton)) {
+                if (state == 1 && Input.GetMouseButtonDown(cancelMouseButton))
+                {
                     // Cancel
                     state = 0;
                 }
-                if (Input.GetMouseButtonDown(mouseButton) && !UtilsClass.IsPointerOverUI()) {
-                    if (state == 0) {
+                if (Input.GetMouseButtonDown(mouseButton) && !UtilsClass.IsPointerOverUI())
+                {
+                    if (state == 0)
+                    {
                         state = 1;
                         from = UtilsClass.GetMouseWorldPosition();
-                    } else {
+                    }
+                    else
+                    {
                         state = 0;
                         onMouseClickFromTo(from, UtilsClass.GetMouseWorldPosition());
                     }
                 }
-                return false; 
+                return false;
             });
         }
 
-        public static FunctionUpdater CreateMouseClickAction(Action<Vector3> onMouseClick) {
+        public static FunctionUpdater CreateMouseClickAction(Action<Vector3> onMouseClick)
+        {
             return CreateMouseClickAction(0, onMouseClick);
         }
 
-        public static FunctionUpdater CreateMouseClickAction(int mouseButton, Action<Vector3> onMouseClick) {
-            return FunctionUpdater.Create(() => {
-                if (Input.GetMouseButtonDown(mouseButton)) {
+        public static FunctionUpdater CreateMouseClickAction(int mouseButton, Action<Vector3> onMouseClick)
+        {
+            return FunctionUpdater.Create(() =>
+            {
+                if (Input.GetMouseButtonDown(mouseButton))
+                {
                     onMouseClick(GetWorldPositionFromUI());
                 }
-                return false; 
+                return false;
             });
         }
 
-        public static FunctionUpdater CreateKeyCodeAction(KeyCode keyCode, Action onKeyDown) {
-            return FunctionUpdater.Create(() => {
-                if (Input.GetKeyDown(keyCode)) {
+        public static FunctionUpdater CreateKeyCodeAction(KeyCode keyCode, Action onKeyDown)
+        {
+            return FunctionUpdater.Create(() =>
+            {
+                if (Input.GetKeyDown(keyCode))
+                {
                     onKeyDown();
                 }
-                return false; 
+                return false;
             });
         }
 
-        
+
 
         // Get UI Position from World Position
-        public static Vector2 GetWorldUIPosition(Vector3 worldPosition, Transform parent, Camera uiCamera, Camera worldCamera) {
+        public static Vector2 GetWorldUIPosition(Vector3 worldPosition, Transform parent, Camera uiCamera, Camera worldCamera)
+        {
             Vector3 screenPosition = worldCamera.WorldToScreenPoint(worldPosition);
             Vector3 uiCameraWorldPosition = uiCamera.ScreenToWorldPoint(screenPosition);
             Vector3 localPos = parent.InverseTransformPoint(uiCameraWorldPosition);
             return new Vector2(localPos.x, localPos.y);
         }
 
-        public static Vector3 GetWorldPositionFromUIZeroZ() {
+        public static Vector3 GetWorldPositionFromUIZeroZ()
+        {
             Vector3 vec = GetWorldPositionFromUI(Input.mousePosition, Camera.main);
             vec.z = 0f;
             return vec;
         }
 
         // Get World Position from UI Position
-        public static Vector3 GetWorldPositionFromUI() {
+        public static Vector3 GetWorldPositionFromUI()
+        {
             return GetWorldPositionFromUI(Input.mousePosition, Camera.main);
         }
 
-        public static Vector3 GetWorldPositionFromUI(Camera worldCamera) {
+        public static Vector3 GetWorldPositionFromUI(Camera worldCamera)
+        {
             return GetWorldPositionFromUI(Input.mousePosition, worldCamera);
         }
 
-        public static Vector3 GetWorldPositionFromUI(Vector3 screenPosition, Camera worldCamera) {
+        public static Vector3 GetWorldPositionFromUI(Vector3 screenPosition, Camera worldCamera)
+        {
             Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
             return worldPosition;
         }
-    
-        public static Vector3 GetWorldPositionFromUI_Perspective() {
+
+        public static Vector3 GetWorldPositionFromUI_Perspective()
+        {
             return GetWorldPositionFromUI_Perspective(Input.mousePosition, Camera.main);
         }
 
-        public static Vector3 GetWorldPositionFromUI_Perspective(Camera worldCamera) {
+        public static Vector3 GetWorldPositionFromUI_Perspective(Camera worldCamera)
+        {
             return GetWorldPositionFromUI_Perspective(Input.mousePosition, worldCamera);
         }
 
-        public static Vector3 GetWorldPositionFromUI_Perspective(Vector3 screenPosition, Camera worldCamera) {
+        public static Vector3 GetWorldPositionFromUI_Perspective(Vector3 screenPosition, Camera worldCamera)
+        {
             Ray ray = worldCamera.ScreenPointToRay(screenPosition);
             Plane xy = new Plane(Vector3.forward, new Vector3(0, 0, 0f));
             float distance;
@@ -584,9 +686,11 @@ namespace CodeMonkey.Utils {
 
 
         // Screen Shake
-        public static void ShakeCamera(float intensity, float timer) {
+        public static void ShakeCamera(float intensity, float timer)
+        {
             Vector3 lastCameraMovement = Vector3.zero;
-            FunctionUpdater.Create(delegate () {
+            FunctionUpdater.Create(delegate ()
+            {
                 timer -= Time.unscaledDeltaTime;
                 Vector3 randomMovement = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized * intensity;
                 Camera.main.transform.position = Camera.main.transform.position - lastCameraMovement + randomMovement;
@@ -597,27 +701,33 @@ namespace CodeMonkey.Utils {
 
 
         // Trigger an action next frame
-        public static FunctionUpdater ActionNextFrame(Action action) {
-            return FunctionUpdater.Create(() => {
+        public static FunctionUpdater ActionNextFrame(Action action)
+        {
+            return FunctionUpdater.Create(() =>
+            {
                 action();
                 return true;
             });
         }
 
         // Return random element from array
-        public static T GetRandom<T>(T[] array) {
+        public static T GetRandom<T>(T[] array)
+        {
             return array[UnityEngine.Random.Range(0, array.Length)];
         }
 
 
         // Return a number with milli dots, 1000000 -> 1.000.000
-        public static string GetMilliDots(float n) {
+        public static string GetMilliDots(float n)
+        {
             return GetMilliDots((long)n);
         }
 
-        public static string GetMilliDots(long n) {
+        public static string GetMilliDots(long n)
+        {
             string ret = n.ToString();
-            for (int i = 1; i <= Mathf.Floor(ret.Length / 4); i++) {
+            for (int i = 1; i <= Mathf.Floor(ret.Length / 4); i++)
+            {
                 ret = ret.Substring(0, ret.Length - i * 3 - (i - 1)) + "." + ret.Substring(ret.Length - i * 3 - (i - 1));
             }
             return ret;
@@ -625,10 +735,12 @@ namespace CodeMonkey.Utils {
 
 
         // Return with milli dots and dollar sign
-        public static string GetDollars(float n) {
+        public static string GetDollars(float n)
+        {
             return GetDollars((long)n);
         }
-        public static string GetDollars(long n) {
+        public static string GetDollars(long n)
+        {
             if (n < 0)
                 return "-$" + GetMilliDots(Mathf.Abs(n));
             else
@@ -638,15 +750,18 @@ namespace CodeMonkey.Utils {
 
 
         [System.Serializable]
-        private class JsonDictionary {
+        private class JsonDictionary
+        {
             public List<string> keyList = new List<string>();
             public List<string> valueList = new List<string>();
         }
 
         // Take a Dictionary and return JSON string
-        public static string SaveDictionaryJson<TKey, TValue>(Dictionary<TKey, TValue> dictionary) {
+        public static string SaveDictionaryJson<TKey, TValue>(Dictionary<TKey, TValue> dictionary)
+        {
             JsonDictionary jsonDictionary = new JsonDictionary();
-            foreach (TKey key in dictionary.Keys) {
+            foreach (TKey key in dictionary.Keys)
+            {
                 jsonDictionary.keyList.Add(JsonUtility.ToJson(key));
                 jsonDictionary.valueList.Add(JsonUtility.ToJson(dictionary[key]));
             }
@@ -655,10 +770,12 @@ namespace CodeMonkey.Utils {
         }
 
         // Take a JSON string and return Dictionary<T1, T2>
-        public static Dictionary<TKey, TValue> LoadDictionaryJson<TKey, TValue>(string saveJson) {
+        public static Dictionary<TKey, TValue> LoadDictionaryJson<TKey, TValue>(string saveJson)
+        {
             JsonDictionary jsonDictionary = JsonUtility.FromJson<JsonDictionary>(saveJson);
             Dictionary<TKey, TValue> ret = new Dictionary<TKey, TValue>();
-            for (int i = 0; i < jsonDictionary.keyList.Count; i++) {
+            for (int i = 0; i < jsonDictionary.keyList.Count; i++)
+            {
                 TKey key = JsonUtility.FromJson<TKey>(jsonDictionary.keyList[i]);
                 TValue value = JsonUtility.FromJson<TValue>(jsonDictionary.valueList[i]);
                 ret[key] = value;
@@ -668,28 +785,34 @@ namespace CodeMonkey.Utils {
 
 
         // Split a string into an array based on a Separator
-        public static string[] SplitString(string save, string separator) {
+        public static string[] SplitString(string save, string separator)
+        {
             return save.Split(new string[] { separator }, System.StringSplitOptions.None);
         }
 
 
         // Destroy all children of this parent
-        public static void DestroyChildren(Transform parent) {
+        public static void DestroyChildren(Transform parent)
+        {
             foreach (Transform transform in parent)
                 GameObject.Destroy(transform.gameObject);
         }
 
         // Destroy all children and randomize their names, useful if you want to do a Find() after calling destroy, since they only really get destroyed at the end of the frame
-        public static void DestroyChildrenRandomizeNames(Transform parent) {
-            foreach (Transform transform in parent) {
+        public static void DestroyChildrenRandomizeNames(Transform parent)
+        {
+            foreach (Transform transform in parent)
+            {
                 transform.name = "" + UnityEngine.Random.Range(10000, 99999);
                 GameObject.Destroy(transform.gameObject);
             }
         }
 
         // Destroy all children except the ones with these names
-        public static void DestroyChildren(Transform parent, params string[] ignoreArr) {
-            foreach (Transform transform in parent) {
+        public static void DestroyChildren(Transform parent, params string[] ignoreArr)
+        {
+            foreach (Transform transform in parent)
+            {
                 if (System.Array.IndexOf(ignoreArr, transform.name) == -1) // Don't ignore
                     GameObject.Destroy(transform.gameObject);
             }
@@ -697,9 +820,11 @@ namespace CodeMonkey.Utils {
 
 
         // Set all parent and all children to this layer
-        public static void SetAllChildrenLayer(Transform parent, int layer) {
+        public static void SetAllChildrenLayer(Transform parent, int layer)
+        {
             parent.gameObject.layer = layer;
-            foreach (Transform trans in parent) {
+            foreach (Transform trans in parent)
+            {
                 SetAllChildrenLayer(trans, layer);
             }
         }
@@ -707,25 +832,30 @@ namespace CodeMonkey.Utils {
 
 
         // Returns a random script that can be used to id
-        public static string GetIdString() {
+        public static string GetIdString()
+        {
             string alphabet = "0123456789abcdefghijklmnopqrstuvxywz";
             string ret = "";
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++)
+            {
                 ret += alphabet[UnityEngine.Random.Range(0, alphabet.Length)];
             }
             return ret;
         }
 
         // Returns a random script that can be used to id (bigger alphabet)
-        public static string GetIdStringLong() {
+        public static string GetIdStringLong()
+        {
             return GetIdStringLong(10);
         }
 
         // Returns a random script that can be used to id (bigger alphabet)
-        public static string GetIdStringLong(int chars) {
+        public static string GetIdStringLong(int chars)
+        {
             string alphabet = "0123456789abcdefghijklmnopqrstuvxywzABCDEFGHIJKLMNOPQRSTUVXYWZ";
             string ret = "";
-            for (int i = 0; i < chars; i++) {
+            for (int i = 0; i < chars; i++)
+            {
                 ret += alphabet[UnityEngine.Random.Range(0, alphabet.Length)];
             }
             return ret;
@@ -734,16 +864,20 @@ namespace CodeMonkey.Utils {
 
 
         // Get a random male name and optionally single letter surname
-        public static string GetRandomName(bool withSurname = false) {
+        public static string GetRandomName(bool withSurname = false)
+        {
             List<string> firstNameList = new List<string>(){"Gabe","Cliff","Tim","Ron","Jon","John","Mike","Seth","Alex","Steve","Chris","Will","Bill","James","Jim",
                                         "Ahmed","Omar","Peter","Pierre","George","Lewis","Lewie","Adam","William","Ali","Eddie","Ed","Dick","Robert","Bob","Rob",
                                         "Neil","Tyson","Carl","Chris","Christopher","Jensen","Gordon","Morgan","Richard","Wen","Wei","Luke","Lucas","Noah","Ivan","Yusuf",
                                         "Ezio","Connor","Milan","Nathan","Victor","Harry","Ben","Charles","Charlie","Jack","Leo","Leonardo","Dylan","Steven","Jeff",
                                         "Alex","Mark","Leon","Oliver","Danny","Liam","Joe","Tom","Thomas","Bruce","Clark","Tyler","Jared","Brad","Jason"};
 
-            if (!withSurname) {
+            if (!withSurname)
+            {
                 return firstNameList[UnityEngine.Random.Range(0, firstNameList.Count)];
-            } else {
+            }
+            else
+            {
                 string alphabet = "ABCDEFGHIJKLMNOPQRSTUVXYWZ";
                 return firstNameList[UnityEngine.Random.Range(0, firstNameList.Count)] + " " + alphabet[UnityEngine.Random.Range(0, alphabet.Length)] + ".";
             }
@@ -752,7 +886,8 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static string GetRandomCityName() {
+        public static string GetRandomCityName()
+        {
             List<string> cityNameList = new List<string>(){"Alabama","New York","Old York","Bangkok","Lisbon","Vee","Agen","Agon","Ardok","Arbok",
                             "Kobra","House","Noun","Hayar","Salma","Chancellor","Dascomb","Payn","Inglo","Lorr","Ringu",
                             "Brot","Mount Loom","Kip","Chicago","Madrid","London","Gam",
@@ -773,30 +908,40 @@ namespace CodeMonkey.Utils {
 
 
         // Is this position inside the FOV? Top Down Perspective
-        public static bool IsPositionInsideFov(Vector3 pos, Vector3 aimDir, Vector3 posTarget, float fov) {
+        public static bool IsPositionInsideFov(Vector3 pos, Vector3 aimDir, Vector3 posTarget, float fov)
+        {
             int aimAngle = UtilsClass.GetAngleFromVector180(aimDir);
             int angle = UtilsClass.GetAngleFromVector180(posTarget - pos);
             int angleDifference = (angle - aimAngle);
             if (angleDifference > 180) angleDifference -= 360;
             if (angleDifference < -180) angleDifference += 360;
-            if (!(angleDifference < fov / 2f && angleDifference > -fov / 2f)) {
+            if (!(angleDifference < fov / 2f && angleDifference > -fov / 2f))
+            {
                 // Not inside fov
                 return false;
-            } else {
+            }
+            else
+            {
                 // Inside fov
                 return true;
             }
         }
 
         // Take two color arrays (pixels) and merge them
-        public static void MergeColorArrays(Color[] baseArray, Color[] overlay) {
-            for (int i = 0; i < baseArray.Length; i++) {
-                if (overlay[i].a > 0) {
+        public static void MergeColorArrays(Color[] baseArray, Color[] overlay)
+        {
+            for (int i = 0; i < baseArray.Length; i++)
+            {
+                if (overlay[i].a > 0)
+                {
                     // Not empty color
-                    if (overlay[i].a >= 1) {
+                    if (overlay[i].a >= 1)
+                    {
                         // Fully replace
                         baseArray[i] = overlay[i];
-                    } else {
+                    }
+                    else
+                    {
                         // Interpolate colors
                         float alpha = overlay[i].a;
                         baseArray[i].r += (overlay[i].r - baseArray[i].r) * alpha;
@@ -809,33 +954,44 @@ namespace CodeMonkey.Utils {
         }
 
         // Replace color in baseArray with replaceArray if baseArray[i] != ignoreColor
-        public static void ReplaceColorArrays(Color[] baseArray, Color[] replaceArray, Color ignoreColor) {
-            for (int i = 0; i < baseArray.Length; i++) {
-                if (baseArray[i] != ignoreColor) {
+        public static void ReplaceColorArrays(Color[] baseArray, Color[] replaceArray, Color ignoreColor)
+        {
+            for (int i = 0; i < baseArray.Length; i++)
+            {
+                if (baseArray[i] != ignoreColor)
+                {
                     baseArray[i] = replaceArray[i];
                 }
             }
         }
 
-        public static void MaskColorArrays(Color[] baseArray, Color[] mask) {
-            for (int i = 0; i < baseArray.Length; i++) {
-                if (baseArray[i].a > 0f) {
+        public static void MaskColorArrays(Color[] baseArray, Color[] mask)
+        {
+            for (int i = 0; i < baseArray.Length; i++)
+            {
+                if (baseArray[i].a > 0f)
+                {
                     baseArray[i].a = mask[i].a;
                 }
             }
         }
 
-        public static void TintColorArray(Color[] baseArray, Color tint) {
-            for (int i = 0; i < baseArray.Length; i++) {
+        public static void TintColorArray(Color[] baseArray, Color tint)
+        {
+            for (int i = 0; i < baseArray.Length; i++)
+            {
                 // Apply tint
                 baseArray[i].r = tint.r * baseArray[i].r;
                 baseArray[i].g = tint.g * baseArray[i].g;
                 baseArray[i].b = tint.b * baseArray[i].b;
             }
         }
-        public static void TintColorArrayInsideMask(Color[] baseArray, Color tint, Color[] mask) {
-            for (int i = 0; i < baseArray.Length; i++) {
-                if (mask[i].a > 0) {
+        public static void TintColorArrayInsideMask(Color[] baseArray, Color tint, Color[] mask)
+        {
+            for (int i = 0; i < baseArray.Length; i++)
+            {
+                if (mask[i].a > 0)
+                {
                     // Apply tint
                     Color baseColor = baseArray[i];
                     Color fullyTintedColor = tint * baseColor;
@@ -847,7 +1003,8 @@ namespace CodeMonkey.Utils {
             }
         }
 
-        public static Color TintColor(Color baseColor, Color tint) {
+        public static Color TintColor(Color baseColor, Color tint)
+        {
             // Apply tint
             baseColor.r = tint.r * baseColor.r;
             baseColor.g = tint.g * baseColor.g;
@@ -856,11 +1013,13 @@ namespace CodeMonkey.Utils {
             return baseColor;
         }
 
-        public static bool IsColorSimilar255(Color colorA, Color colorB, int maxDiff) {
+        public static bool IsColorSimilar255(Color colorA, Color colorB, int maxDiff)
+        {
             return IsColorSimilar(colorA, colorB, maxDiff / 255f);
         }
 
-        public static bool IsColorSimilar(Color colorA, Color colorB, float maxDiff) {
+        public static bool IsColorSimilar(Color colorA, Color colorB, float maxDiff)
+        {
             float rDiff = Mathf.Abs(colorA.r - colorB.r);
             float gDiff = Mathf.Abs(colorA.g - colorB.g);
             float bDiff = Mathf.Abs(colorA.b - colorB.b);
@@ -870,7 +1029,8 @@ namespace CodeMonkey.Utils {
             return totalDiff < maxDiff;
         }
 
-        public static float GetColorDifference(Color colorA, Color colorB) {
+        public static float GetColorDifference(Color colorA, Color colorB)
+        {
             float rDiff = Mathf.Abs(colorA.r - colorB.r);
             float gDiff = Mathf.Abs(colorA.g - colorB.g);
             float bDiff = Mathf.Abs(colorA.b - colorB.b);
@@ -882,11 +1042,13 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static Vector3 GetRandomPositionWithinRectangle(float xMin, float xMax, float yMin, float yMax) {
+        public static Vector3 GetRandomPositionWithinRectangle(float xMin, float xMax, float yMin, float yMax)
+        {
             return new Vector3(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
         }
 
-        public static Vector3 GetRandomPositionWithinRectangle(Vector3 lowerLeft, Vector3 upperRight) {
+        public static Vector3 GetRandomPositionWithinRectangle(Vector3 lowerLeft, Vector3 upperRight)
+        {
             return new Vector3(UnityEngine.Random.Range(lowerLeft.x, upperRight.x), UnityEngine.Random.Range(lowerLeft.y, upperRight.y));
         }
 
@@ -894,7 +1056,8 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static string GetTimeHMS(float time, bool hours = true, bool minutes = true, bool seconds = true, bool milliseconds = true) {
+        public static string GetTimeHMS(float time, bool hours = true, bool minutes = true, bool seconds = true, bool milliseconds = true)
+        {
             string h0, h1, m0, m1, s0, s1, ms0, ms1, ms2;
             GetTimeCharacterStrings(time, out h0, out h1, out m0, out m1, out s0, out s1, out ms0, out ms1, out ms2);
             string h = h0 + h1;
@@ -902,46 +1065,74 @@ namespace CodeMonkey.Utils {
             string s = s0 + s1;
             string ms = ms0 + ms1 + ms2;
 
-            if (hours) {
-                if (minutes) {
-                    if (seconds) {
-                        if (milliseconds) {
+            if (hours)
+            {
+                if (minutes)
+                {
+                    if (seconds)
+                    {
+                        if (milliseconds)
+                        {
                             return h + ":" + m + ":" + s + "." + ms;
-                        } else {
+                        }
+                        else
+                        {
                             return h + ":" + m + ":" + s;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         return h + ":" + m;
                     }
-                } else {
+                }
+                else
+                {
                     return h;
                 }
-            } else {
-                if (minutes) {
-                    if (seconds) {
-                        if (milliseconds) {
+            }
+            else
+            {
+                if (minutes)
+                {
+                    if (seconds)
+                    {
+                        if (milliseconds)
+                        {
                             return m + ":" + s + "." + ms;
-                        } else {
+                        }
+                        else
+                        {
                             return m + ":" + s;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         return m;
                     }
-                } else {
-                    if (seconds) {
-                        if (milliseconds) {
+                }
+                else
+                {
+                    if (seconds)
+                    {
+                        if (milliseconds)
+                        {
                             return s + "." + ms;
-                        } else {
+                        }
+                        else
+                        {
                             return s;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         return ms;
                     }
                 }
             }
         }
 
-        public static void SetupTimeHMSTransform(Transform transform, float time) {
+        public static void SetupTimeHMSTransform(Transform transform, float time)
+        {
             string h0, h1, m0, m1, s0, s1, ms0, ms1, ms2;
             GetTimeCharacterStrings(time, out h0, out h1, out m0, out m1, out s0, out s1, out ms0, out ms1, out ms2);
 
@@ -968,7 +1159,8 @@ namespace CodeMonkey.Utils {
                 transform.Find("ms2").GetComponent<Text>().text = ms2;
         }
 
-        public static void GetTimeHMS(float time, out int h, out int m, out int s, out int ms) {
+        public static void GetTimeHMS(float time, out int h, out int m, out int s, out int ms)
+        {
             s = Mathf.FloorToInt(time);
             m = Mathf.FloorToInt(s / 60f);
             h = Mathf.FloorToInt((s / 60f) / 60f);
@@ -977,7 +1169,8 @@ namespace CodeMonkey.Utils {
             ms = (int)((time - Mathf.FloorToInt(time)) * 1000);
         }
 
-        public static void GetTimeCharacterStrings(float time, out string h0, out string h1, out string m0, out string m1, out string s0, out string s1, out string ms0, out string ms1, out string ms2) {
+        public static void GetTimeCharacterStrings(float time, out string h0, out string h1, out string m0, out string m1, out string s0, out string s1, out string ms0, out string ms1, out string ms2)
+        {
             int s = Mathf.FloorToInt(time);
             int m = Mathf.FloorToInt(s / 60f);
             int h = Mathf.FloorToInt((s / 60f) / 60f);
@@ -985,42 +1178,57 @@ namespace CodeMonkey.Utils {
             m = m - h * 60;
             int ms = (int)((time - Mathf.FloorToInt(time)) * 1000);
 
-            if (h < 10) {
+            if (h < 10)
+            {
                 h0 = "0";
                 h1 = "" + h;
-            } else {
+            }
+            else
+            {
                 h0 = "" + Mathf.FloorToInt(h / 10f);
                 h1 = "" + (h - Mathf.FloorToInt(h / 10f) * 10);
             }
 
-            if (m < 10) {
+            if (m < 10)
+            {
                 m0 = "0";
                 m1 = "" + m;
-            } else {
+            }
+            else
+            {
                 m0 = "" + Mathf.FloorToInt(m / 10f);
                 m1 = "" + (m - Mathf.FloorToInt(m / 10f) * 10);
             }
 
-            if (s < 10) {
+            if (s < 10)
+            {
                 s0 = "0";
                 s1 = "" + s;
-            } else {
+            }
+            else
+            {
                 s0 = "" + Mathf.FloorToInt(s / 10f);
                 s1 = "" + (s - Mathf.FloorToInt(s / 10f) * 10);
             }
 
 
-            if (ms < 10) {
+            if (ms < 10)
+            {
                 ms0 = "0";
                 ms1 = "0";
                 ms2 = "" + ms;
-            } else {
+            }
+            else
+            {
                 // >= 10
-                if (ms < 100) {
+                if (ms < 100)
+                {
                     ms0 = "0";
                     ms1 = "" + Mathf.FloorToInt(ms / 10f);
                     ms2 = "" + (ms - Mathf.FloorToInt(ms / 10f) * 10);
-                } else {
+                }
+                else
+                {
                     // >= 100
                     int _i_ms0 = Mathf.FloorToInt(ms / 100f);
                     int _i_ms1 = Mathf.FloorToInt(ms / 10f) - (_i_ms0 * 10);
@@ -1032,11 +1240,13 @@ namespace CodeMonkey.Utils {
             }
         }
 
-        public static void PrintTimeMilliseconds(float startTime, string prefix = "") {
+        public static void PrintTimeMilliseconds(float startTime, string prefix = "")
+        {
             Debug.Log(prefix + GetTimeMilliseconds(startTime));
         }
 
-        public static float GetTimeMilliseconds(float startTime) {
+        public static float GetTimeMilliseconds(float startTime)
+        {
             return (Time.realtimeSinceStartup - startTime) * 1000f;
         }
 
@@ -1044,9 +1254,11 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static List<Vector3> GetPositionListAround(Vector3 position, float distance, int positionCount) {
+        public static List<Vector3> GetPositionListAround(Vector3 position, float distance, int positionCount)
+        {
             List<Vector3> ret = new List<Vector3>();
-            for (int i = 0; i < positionCount; i++) {
+            for (int i = 0; i < positionCount; i++)
+            {
                 int angle = i * (360 / positionCount);
                 Vector3 dir = UtilsClass.ApplyRotationToVector(new Vector3(0, 1), angle);
                 Vector3 pos = position + dir * distance;
@@ -1055,18 +1267,22 @@ namespace CodeMonkey.Utils {
             return ret;
         }
 
-        public static List<Vector3> GetPositionListAround(Vector3 position, float[] ringDistance, int[] ringPositionCount) {
+        public static List<Vector3> GetPositionListAround(Vector3 position, float[] ringDistance, int[] ringPositionCount)
+        {
             List<Vector3> ret = new List<Vector3>();
-            for (int ring = 0; ring < ringPositionCount.Length; ring++) {
+            for (int ring = 0; ring < ringPositionCount.Length; ring++)
+            {
                 List<Vector3> ringPositionList = GetPositionListAround(position, ringDistance[ring], ringPositionCount[ring]);
                 ret.AddRange(ringPositionList);
             }
             return ret;
         }
 
-        public static List<Vector3> GetPositionListAround(Vector3 position, float distance, int positionCount, Vector3 direction, int angleStart, int angleIncrease) {
+        public static List<Vector3> GetPositionListAround(Vector3 position, float distance, int positionCount, Vector3 direction, int angleStart, int angleIncrease)
+        {
             List<Vector3> ret = new List<Vector3>();
-            for (int i = 0; i < positionCount; i++) {
+            for (int i = 0; i < positionCount; i++)
+            {
                 int angle = angleStart + angleIncrease * i;
                 Vector3 dir = UtilsClass.ApplyRotationToVector(direction, angle);
                 Vector3 pos = position + dir * distance;
@@ -1075,22 +1291,26 @@ namespace CodeMonkey.Utils {
             return ret;
         }
 
-        public static List<Vector3> GetPositionListAlongDirection(Vector3 position, Vector3 direction, float distancePerPosition, int positionCount) {
+        public static List<Vector3> GetPositionListAlongDirection(Vector3 position, Vector3 direction, float distancePerPosition, int positionCount)
+        {
             List<Vector3> ret = new List<Vector3>();
-            for (int i = 0; i < positionCount; i++) {
+            for (int i = 0; i < positionCount; i++)
+            {
                 Vector3 pos = position + direction * (distancePerPosition * i);
                 ret.Add(pos);
             }
             return ret;
         }
 
-        public static List<Vector3> GetPositionListAlongAxis(Vector3 positionStart, Vector3 positionEnd, int positionCount) {
+        public static List<Vector3> GetPositionListAlongAxis(Vector3 positionStart, Vector3 positionEnd, int positionCount)
+        {
             Vector3 direction = (positionEnd - positionStart).normalized;
             float distancePerPosition = (positionEnd - positionStart).magnitude / positionCount;
             return GetPositionListAlongDirection(positionStart + direction * (distancePerPosition / 2f), direction, distancePerPosition, positionCount);
         }
 
-        public static List<Vector3> GetPositionListWithinRect(Vector3 lowerLeft, Vector3 upperRight, int positionCount) {
+        public static List<Vector3> GetPositionListWithinRect(Vector3 lowerLeft, Vector3 upperRight, int positionCount)
+        {
             List<Vector3> ret = new List<Vector3>();
             float width = upperRight.x - lowerLeft.x;
             float height = upperRight.y - lowerLeft.y;
@@ -1105,17 +1325,20 @@ namespace CodeMonkey.Utils {
             rowLeft.y += increaseY / 2f;
             rowRight.y += increaseY / 2f;
             int positionsPerRow = Mathf.RoundToInt(width / positionSquareSize);
-            for (int i = 0; i < rowsTotal; i++) {
+            for (int i = 0; i < rowsTotal; i++)
+            {
                 ret.AddRange(GetPositionListAlongAxis(rowLeft, rowRight, positionsPerRow));
                 rowLeft.y += increaseY;
                 rowRight.y += increaseY;
             }
             int missingPositions = positionCount - ret.Count;
             Vector3 angleDir = (upperRight - lowerLeft) / missingPositions;
-            for (int i = 0; i < missingPositions; i++) {
+            for (int i = 0; i < missingPositions; i++)
+            {
                 ret.Add(lowerLeft + (angleDir / 2f) + angleDir * i);
             }
-            while (ret.Count > positionCount) {
+            while (ret.Count > positionCount)
+            {
                 ret.RemoveAt(UnityEngine.Random.Range(0, ret.Count));
             }
             return ret;
@@ -1123,10 +1346,13 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static List<Vector2Int> GetPosXYListDiamond(int size) {
+        public static List<Vector2Int> GetPosXYListDiamond(int size)
+        {
             List<Vector2Int> list = new List<Vector2Int>();
-            for (int x = 0; x < size; x++) {
-                for (int y = 0; y < size - x; y++) {
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < size - x; y++)
+                {
                     list.Add(new Vector2Int(x, y));
                     list.Add(new Vector2Int(-x, y));
                     list.Add(new Vector2Int(x, -y));
@@ -1136,30 +1362,37 @@ namespace CodeMonkey.Utils {
             return list;
         }
 
-        public static List<Vector2Int> GetPosXYListOblong(int width, int dropXamount, int increaseDropXamount, Vector3 dir) {
+        public static List<Vector2Int> GetPosXYListOblong(int width, int dropXamount, int increaseDropXamount, Vector3 dir)
+        {
             List<Vector2Int> list = GetPosXYListOblong(width, dropXamount, increaseDropXamount);
             list = RotatePosXYList(list, UtilsClass.GetAngleFromVector(dir));
             return list;
         }
 
-        public static List<Vector2Int> GetPosXYListOblong(int width, int dropXamount, int increaseDropXamount) {
+        public static List<Vector2Int> GetPosXYListOblong(int width, int dropXamount, int increaseDropXamount)
+        {
             List<Vector2Int> triangle = GetPosXYListTriangle(width, dropXamount, increaseDropXamount);
             List<Vector2Int> list = new List<Vector2Int>(triangle);
-            foreach (Vector2Int posXY in triangle) {
+            foreach (Vector2Int posXY in triangle)
+            {
                 if (posXY.y == 0) continue;
                 list.Add(new Vector2Int(posXY.x, -posXY.y));
             }
-            foreach (Vector2Int posXY in new List<Vector2Int>(list)) {
+            foreach (Vector2Int posXY in new List<Vector2Int>(list))
+            {
                 if (posXY.x == 0) continue;
                 list.Add(new Vector2Int(-posXY.x, posXY.y));
             }
             return list;
         }
 
-        public static List<Vector2Int> GetPosXYListTriangle(int width, int dropXamount, int increaseDropXamount) {
+        public static List<Vector2Int> GetPosXYListTriangle(int width, int dropXamount, int increaseDropXamount)
+        {
             List<Vector2Int> list = new List<Vector2Int>();
-            for (int i = 0; i > -999; i--) {
-                for (int j = 0; j < width; j++) {
+            for (int i = 0; i > -999; i--)
+            {
+                for (int j = 0; j < width; j++)
+                {
                     list.Add(new Vector2Int(j, i));
                 }
                 width -= dropXamount;
@@ -1169,9 +1402,11 @@ namespace CodeMonkey.Utils {
             return list;
         }
 
-        public static List<Vector2Int> RotatePosXYList(List<Vector2Int> list, int angle) {
+        public static List<Vector2Int> RotatePosXYList(List<Vector2Int> list, int angle)
+        {
             List<Vector2Int> ret = new List<Vector2Int>();
-            for (int i = 0; i < list.Count; i++) {
+            for (int i = 0; i < list.Count; i++)
+            {
                 Vector2Int posXY = list[i];
                 Vector3 vec = UtilsClass.ApplyRotationToVector(new Vector3(posXY.x, posXY.y), angle);
                 ret.Add(new Vector2Int(Mathf.RoundToInt(vec.x), Mathf.RoundToInt(vec.y)));
@@ -1184,7 +1419,8 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static Transform CloneTransform(Transform transform, string name = null) {
+        public static Transform CloneTransform(Transform transform, string name = null)
+        {
             Transform clone = GameObject.Instantiate(transform, transform.parent);
 
             if (name != null)
@@ -1195,16 +1431,19 @@ namespace CodeMonkey.Utils {
             return clone;
         }
 
-        public static Transform CloneTransform(Transform transform, string name, Vector2 newAnchoredPosition, bool setActiveTrue = false) {
+        public static Transform CloneTransform(Transform transform, string name, Vector2 newAnchoredPosition, bool setActiveTrue = false)
+        {
             Transform clone = CloneTransform(transform, name);
             clone.GetComponent<RectTransform>().anchoredPosition = newAnchoredPosition;
-            if (setActiveTrue) {
+            if (setActiveTrue)
+            {
                 clone.gameObject.SetActive(true);
             }
             return clone;
         }
 
-        public static Transform CloneTransform(Transform transform, Transform newParent, string name = null) {
+        public static Transform CloneTransform(Transform transform, Transform newParent, string name = null)
+        {
             Transform clone = GameObject.Instantiate(transform, newParent);
 
             if (name != null)
@@ -1215,16 +1454,19 @@ namespace CodeMonkey.Utils {
             return clone;
         }
 
-        public static Transform CloneTransform(Transform transform, Transform newParent, string name, Vector2 newAnchoredPosition, bool setActiveTrue = false) {
+        public static Transform CloneTransform(Transform transform, Transform newParent, string name, Vector2 newAnchoredPosition, bool setActiveTrue = false)
+        {
             Transform clone = CloneTransform(transform, newParent, name);
             clone.GetComponent<RectTransform>().anchoredPosition = newAnchoredPosition;
-            if (setActiveTrue) {
+            if (setActiveTrue)
+            {
                 clone.gameObject.SetActive(true);
             }
             return clone;
         }
 
-        public static Transform CloneTransformWorld(Transform transform, Transform newParent, string name, Vector3 newLocalPosition) {
+        public static Transform CloneTransformWorld(Transform transform, Transform newParent, string name, Vector3 newLocalPosition)
+        {
             Transform clone = CloneTransform(transform, newParent, name);
             clone.localPosition = newLocalPosition;
             return clone;
@@ -1232,25 +1474,31 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static T[] ArrayAdd<T>(T[] arr, T add) {
+        public static T[] ArrayAdd<T>(T[] arr, T add)
+        {
             T[] ret = new T[arr.Length + 1];
-            for (int i = 0; i < arr.Length; i++) {
+            for (int i = 0; i < arr.Length; i++)
+            {
                 ret[i] = arr[i];
             }
             ret[arr.Length] = add;
             return ret;
         }
 
-        public static void ShuffleArray<T>(T[] arr, int iterations) {
-            for (int i = 0; i < iterations; i++) {
+        public static void ShuffleArray<T>(T[] arr, int iterations)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
                 int rnd = UnityEngine.Random.Range(0, arr.Length);
                 T tmp = arr[rnd];
                 arr[rnd] = arr[0];
                 arr[0] = tmp;
             }
         }
-        public static void ShuffleArray<T>(T[] arr, int iterations, System.Random random) {
-            for (int i = 0; i < iterations; i++) {
+        public static void ShuffleArray<T>(T[] arr, int iterations, System.Random random)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
                 int rnd = random.Next(0, arr.Length);
                 T tmp = arr[rnd];
                 arr[rnd] = arr[0];
@@ -1258,8 +1506,10 @@ namespace CodeMonkey.Utils {
             }
         }
 
-        public static void ShuffleList<T>(List<T> list, int iterations) {
-            for (int i = 0; i < iterations; i++) {
+        public static void ShuffleList<T>(List<T> list, int iterations)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
                 int rnd = UnityEngine.Random.Range(0, list.Count);
                 T tmp = list[rnd];
                 list[rnd] = list[0];
@@ -1268,28 +1518,34 @@ namespace CodeMonkey.Utils {
         }
 
 
-        public static void DebugDrawCircle(Vector3 center, float radius, Color color, float duration, int divisions) {
-            for (int i = 0; i <= divisions; i++) {
+        public static void DebugDrawCircle(Vector3 center, float radius, Color color, float duration, int divisions)
+        {
+            for (int i = 0; i <= divisions; i++)
+            {
                 Vector3 vec1 = center + UtilsClass.ApplyRotationToVector(new Vector3(0, 1) * radius, (360f / divisions) * i);
                 Vector3 vec2 = center + UtilsClass.ApplyRotationToVector(new Vector3(0, 1) * radius, (360f / divisions) * (i + 1));
                 Debug.DrawLine(vec1, vec2, color, duration);
             }
         }
 
-        public static void DebugDrawRectangle(Vector3 minXY, Vector3 maxXY, Color color, float duration) {
+        public static void DebugDrawRectangle(Vector3 minXY, Vector3 maxXY, Color color, float duration)
+        {
             Debug.DrawLine(new Vector3(minXY.x, minXY.y), new Vector3(maxXY.x, minXY.y), color, duration);
             Debug.DrawLine(new Vector3(minXY.x, minXY.y), new Vector3(minXY.x, maxXY.y), color, duration);
             Debug.DrawLine(new Vector3(minXY.x, maxXY.y), new Vector3(maxXY.x, maxXY.y), color, duration);
             Debug.DrawLine(new Vector3(maxXY.x, minXY.y), new Vector3(maxXY.x, maxXY.y), color, duration);
         }
 
-        public static void DebugDrawText(string text, Vector3 position, Color color, float size, float duration) {
+        public static void DebugDrawText(string text, Vector3 position, Color color, float size, float duration)
+        {
             text = text.ToUpper();
             float kerningSize = size * 0.6f;
             Vector3 basePosition = position;
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 char c = text[i];
-                switch (c) {
+                switch (c)
+                {
                     case '\n':
                         // Newline
                         position.x = basePosition.x;
@@ -1307,8 +1563,10 @@ namespace CodeMonkey.Utils {
         }
 
         // Draw Characters using Debug DrawLine Gizmos
-        public static void DebugDrawChar(char c, Vector3 position, Color color, float size, float duration) {
-            switch (c) {
+        public static void DebugDrawChar(char c, Vector3 position, Color color, float size, float duration)
+        {
+            switch (c)
+            {
                 default:
                 case 'A':
                     DebugDrawLines(position, color, size, duration, new[] {
@@ -1459,22 +1717,27 @@ namespace CodeMonkey.Utils {
             }
         }
 
-        public static void DebugDrawLines(Vector3 position, Color color, float size, float duration, Vector3[] points) {
-            for (int i = 0; i < points.Length - 1; i++) {
+        public static void DebugDrawLines(Vector3 position, Color color, float size, float duration, Vector3[] points)
+        {
+            for (int i = 0; i < points.Length - 1; i++)
+            {
                 Debug.DrawLine(position + points[i] * size, position + points[i + 1] * size, color, duration);
             }
         }
 
-        public static void DebugDrawLines(Vector3 position, Color color, float size, float duration, float[] points) {
+        public static void DebugDrawLines(Vector3 position, Color color, float size, float duration, float[] points)
+        {
             List<Vector3> vecList = new List<Vector3>();
-            for (int i = 0; i < points.Length; i += 2) {
+            for (int i = 0; i < points.Length; i += 2)
+            {
                 Vector3 vec = new Vector3(points[i + 0], points[i + 1]);
                 vecList.Add(vec);
             }
             DebugDrawLines(position, color, size, duration, vecList.ToArray());
         }
 
-        public static void ClearLogConsole() {
+        public static void ClearLogConsole()
+        {
 #if UNITY_EDITOR
             //Debug.Log("################# DISABLED BECAUSE OF BUILD!");
             /*
@@ -1487,14 +1750,17 @@ namespace CodeMonkey.Utils {
         }
 
 
-        public static string GetPercentString(float f, bool includeSign = true) {
+        public static string GetPercentString(float f, bool includeSign = true)
+        {
             return Mathf.RoundToInt(f * 100f) + (includeSign ? "%" : "");
         }
 
 
 
-        public static string GetMonthName(int month) {
-            switch (month) {
+        public static string GetMonthName(int month)
+        {
+            switch (month)
+            {
                 default:
                 case 0: return "January";
                 case 1: return "February";
@@ -1511,23 +1777,28 @@ namespace CodeMonkey.Utils {
             }
         }
 
-        public static string GetMonthNameShort(int month) {
+        public static string GetMonthNameShort(int month)
+        {
             return GetMonthName(month).Substring(0, 3);
         }
 
 
 
 
-        public static class ReflectionTools {
+        public static class ReflectionTools
+        {
 
-            public static object CallMethod(string typeName, string methodName) {
+            public static object CallMethod(string typeName, string methodName)
+            {
                 return System.Type.GetType(typeName).GetMethod(methodName).Invoke(null, null);
             }
-            public static object GetField(string typeName, string fieldName) {
+            public static object GetField(string typeName, string fieldName)
+            {
                 System.Reflection.FieldInfo fieldInfo = System.Type.GetType(typeName).GetField(fieldName);
                 return fieldInfo.GetValue(null);
             }
-            public static System.Type GetNestedType(string typeName, string nestedTypeName) {
+            public static System.Type GetNestedType(string typeName, string nestedTypeName)
+            {
                 return System.Type.GetType(typeName).GetNestedType(nestedTypeName);
             }
 
@@ -1535,24 +1806,31 @@ namespace CodeMonkey.Utils {
 
 
 
-        public static bool TestChance(int chance, int chanceMax = 100) {
+        public static bool TestChance(int chance, int chanceMax = 100)
+        {
             return UnityEngine.Random.Range(0, chanceMax) < chance;
         }
 
-        public static T[] RemoveDuplicates<T>(T[] arr) {
+        public static T[] RemoveDuplicates<T>(T[] arr)
+        {
             List<T> list = new List<T>();
-            foreach (T t in arr) {
-                if (!list.Contains(t)) {
+            foreach (T t in arr)
+            {
+                if (!list.Contains(t))
+                {
                     list.Add(t);
                 }
             }
             return list.ToArray();
         }
 
-        public static List<T> RemoveDuplicates<T>(List<T> arr) {
+        public static List<T> RemoveDuplicates<T>(List<T> arr)
+        {
             List<T> list = new List<T>();
-            foreach (T t in arr) {
-                if (!list.Contains(t)) {
+            foreach (T t in arr)
+            {
+                if (!list.Contains(t))
+                {
                     list.Add(t);
                 }
             }

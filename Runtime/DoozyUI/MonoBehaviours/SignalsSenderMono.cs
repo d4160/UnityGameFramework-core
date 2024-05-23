@@ -1,3 +1,4 @@
+#if !DEDICATED_SERVER
 using d4160.Collections;
 using d4160.Core;
 using NaughtyAttributes;
@@ -71,3 +72,4 @@ namespace d4160.DoozyUI
         }
     }
 }
+#endif

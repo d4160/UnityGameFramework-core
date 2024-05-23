@@ -1,3 +1,4 @@
+#if !DEDICATED_SERVER
 using d4160.Loops;
 using Dissonance;
 using UnityEngine;
@@ -66,3 +67,4 @@ namespace d4160.Dissonance
         }
     }
 }
+#endif

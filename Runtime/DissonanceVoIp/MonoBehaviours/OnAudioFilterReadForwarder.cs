@@ -1,3 +1,4 @@
+#if !DEDICATED_SERVER
 using d4160.Events;
 using d4160.Variables;
 using UnityEngine.Serialization;
@@ -102,3 +103,4 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
         _muteState = isMuted ? MuteState.Before : MuteState.After;
     }
 }
+#endif

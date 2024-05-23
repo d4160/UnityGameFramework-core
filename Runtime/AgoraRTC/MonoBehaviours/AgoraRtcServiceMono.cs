@@ -1,3 +1,4 @@
+#if !DEDICATED_SERVER
 using Agora.Rtc;
 using d4160.MonoBehaviours;
 using System.Collections.Generic;
@@ -95,3 +96,4 @@ namespace d4160.AgoraRtc
         }
     }
 }
+#endif

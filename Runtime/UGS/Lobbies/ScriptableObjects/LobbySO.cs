@@ -132,6 +132,8 @@ namespace d4160.UGS.Lobbies
 
             string newHostId = string.Empty;
 
+            if (Lobby == null || Lobby.Players == null) return;
+
             for (int i = 0; i < Lobby.Players.Count; i++)
             {
                 if (Lobby.Players[i].Id == currentHostId)
@@ -169,7 +171,7 @@ namespace d4160.UGS.Lobbies
             }
         }
 
-        public async void LeaveOrDeleteLobby(bool migrateHost = false)
+        public async Task LeaveOrDeleteLobby(bool migrateHost = false)
         {
             if (Lobby != null)
             {

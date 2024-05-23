@@ -3,6 +3,7 @@ using System.Collections;
 using d4160.Events;
 using d4160.Loops;
 using d4160.Singleton;
+using d4160.UGS.Multiplay.LifecycleAPI;
 using NaughtyAttributes;
 using Unity.Netcode;
 using Unity.Services.Core;
@@ -15,14 +16,18 @@ namespace d4160.UGS.Multiplay
     {
         [SerializeField] private bool _startServerAtStart;
         [SerializeField] private bool _setReadyServerForPlayersOnServerStarted;
+        [SerializeField, Tooltip("The time to wait until remove allocation when nobody is in the server")] private float _autoRemoveAllocationMaxTime = 31f;
 
         [Header("Data")]
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Expandable]
 #endif
         [SerializeField] private MultiplaySO _multiplay;
+        [SerializeField] private RemoveAllocationRequestSO _removeAllocReq;
 
         private float _autoAllocateTimer = 9999999f;
+        private float _autoRemoveAllocationTimer = 0;
+        private bool _isSentRemoveAllocationRequest = false;
         private VoidEventSO.EventListener _onServerStartedLtn;
 
         protected override void Awake()
@@ -44,6 +49,8 @@ namespace d4160.UGS.Multiplay
 
         protected void OnEnable()
         {
+            _autoRemoveAllocationTimer = _autoRemoveAllocationMaxTime;
+
             UpdateManager.AddListener(this);
 
             _multiplay.OnServerStarted.AddListener(_onServerStartedLtn);
@@ -91,7 +98,31 @@ namespace d4160.UGS.Multiplay
             {
                 if (NetworkManager.Singleton.IsServer)
                 {
-                    _multiplay.ServerQueryHandler.CurrentPlayers = (ushort)NetworkManager.Singleton.ConnectedClientsIds.Count;
+                    ushort playersCount = (ushort)NetworkManager.Singleton.ConnectedClientsIds.Count;
+
+                    _multiplay.ServerQueryHandler.CurrentPlayers = playersCount;
+
+                    if (playersCount == 0)
+                    {
+                        _autoRemoveAllocationTimer -= deltaTime;
+
+                        if (_autoRemoveAllocationTimer <= 0)
+                        {
+                            if (!_isSentRemoveAllocationRequest)
+                            {
+                                _removeAllocReq.AllocationId = MultiplayService.Instance.ServerConfig.AllocationId;
+                                _removeAllocReq.SendRequest();
+
+                                _autoRemoveAllocationTimer = _autoRemoveAllocationMaxTime * 3.1f;
+                                _isSentRemoveAllocationRequest = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _autoRemoveAllocationTimer = _autoRemoveAllocationMaxTime;
+                        _isSentRemoveAllocationRequest = false;
+                    }
                 }
                 _multiplay.ServerQueryHandler.UpdateServerCheck();
             }

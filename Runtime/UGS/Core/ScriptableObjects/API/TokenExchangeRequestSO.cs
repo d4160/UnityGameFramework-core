@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace d4160.UGS.Multiplay
 {
-    [CreateAssetMenu(menuName = "d4160/UGS/Multiplay/API/TokenRequest")]
+    [CreateAssetMenu(menuName = "d4160/UGS/Core/API/TokenRequest")]
     public class TokenExchangeRequestSO : ScriptableObject
     {
         [SerializeField] private string[] _scopes;

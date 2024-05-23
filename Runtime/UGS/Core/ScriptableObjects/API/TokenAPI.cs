@@ -1,16 +1,17 @@
 using System;
+using d4160.Logging;
 using d4160.UGS.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace d4160.UGS.Multiplay
 {
-    [CreateAssetMenu(menuName = "d4160/UGS/Multiplay/API/Token")]
-    public class MultiplayTokenAPI : ScriptableObject
+    [CreateAssetMenu(menuName = "d4160/UGS/Core/API/Token")]
+    public class TokenAPI : ScriptableObject
     {
         [SerializeField] private ServiceAccountSO _serviceAccount;
         [SerializeField] private ProjectDataSO _projectData;
-        [SerializeField] private MultiplaySO _multiplay;
+        [SerializeField] private LoggerSO _multiplay;
 
         public void TokenExchange(TokenExchangeRequest request, Action<TokenExchangeResponse> onResult, Action<string> onError = null)
         {

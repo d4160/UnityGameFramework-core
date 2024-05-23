@@ -38,7 +38,7 @@ namespace d4160.UGS.Lobbies
                     Order = QueryOrderData.GetOrder(orders)
                 };
 
-                QueryResponse qResponse = await LobbyService.Instance.QueryLobbiesAsync();
+                QueryResponse qResponse = await LobbyService.Instance.QueryLobbiesAsync(options);
 
                 //Debug.Log($"[ListLobbiesAsync] Lobbies Found: {qResponse.Results.Count}");
                 //for (int i = 0; i < qResponse.Results.Count; i++)

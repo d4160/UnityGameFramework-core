@@ -10,7 +10,7 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
     {
         [SerializeField] private ProjectDataSO _projectData;
         [SerializeField] private MultiplayDataSO _multiplayData;
-        [SerializeField] private MultiplayTokenAPI _tokenAPI;
+        [SerializeField] private TokenAPI _tokenAPI;
         [SerializeField] private TokenExchangeRequestSO _tokenExchangeRequest;
         [SerializeField] private MultiplaySO _multiplay;
 
@@ -113,5 +113,41 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
                 onResult?.Invoke(allocationsList);
             });
         }
+
+        // // Learboards API
+        // // TODO: Move to actual folder
+        // public void GetScores(string leaderboardId, string jsonData, Action<string> onResult = null, Action<string> onError = null)
+        // {
+        //     _tokenAPI.TokenExchange(_tokenExchangeRequest.GetRequest(), (result) =>
+        //     {
+        //         GetScoresInternal(result, leaderboardId, jsonData, onResult, onError);
+        //     });
+        // }
+
+        // private void GetScoresInternal(TokenExchangeResponse tokenExchangeResponse, string leaderboardId, string queryParams, Action<string> onResult, Action<string> onError = null)
+        // {
+        //     string url = $"leaderboards.services.api.unity.com/v1/projects/{_projectData.ProjectId}/environments/{_projectData.EnvironmentId}/leaderboards/{leaderboardId}/scores";
+
+        //     Debug.Log(url);
+        //     Debug.Log(queryParams);
+
+        //     WebRequests.Get(url,
+        //     (UnityWebRequest unityWebRequest) =>
+        //     {
+        //         unityWebRequest.SetRequestHeader("Authorization", "Bearer " + tokenExchangeResponse.accessToken);
+        //     },
+        //     (string error) =>
+        //     {
+        //         _multiplay.LogError("Error: " + error);
+
+        //         onError?.Invoke(error);
+        //     },
+        //     (string json) =>
+        //     {
+        //         _multiplay.LogInfo("Success: " + json);
+
+        //         onResult?.Invoke(json);
+        //     });
+        // }
     }
 }

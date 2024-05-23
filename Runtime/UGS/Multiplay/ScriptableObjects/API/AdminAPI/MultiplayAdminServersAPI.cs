@@ -1,5 +1,6 @@
 using System;
 using d4160.UGS.Core;
+using d4160.UGS.Multiplay.LifecycleAPI;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Networking;
