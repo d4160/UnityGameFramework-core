@@ -1,0 +1,20 @@
+{
+    "name": "com.d4160.xr.gc",
+    "rootNamespace": "",
+    "references": [
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320",
+        "GUID:f64c9ebcd7899c3448a08dc9f9ddbe30"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "ENABLE_GAME_CREATOR",
+        "META_SDK"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

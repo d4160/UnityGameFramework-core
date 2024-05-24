@@ -1,0 +1,19 @@
+{
+    "name": "com.d4160.scene-management.gc",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fc9d152dc8e154e4c8bafd89314d25b0",
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "ENABLE_GAME_CREATOR"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

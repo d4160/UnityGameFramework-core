@@ -6,19 +6,21 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 #endif
 using UnityEngine.SceneManagement;
 
-namespace d4160.SceneManagement {
+namespace d4160.SceneManagement
+{
     [System.Serializable]
-    public struct SceneReference : ISerializationCallbackReceiver {
+    public struct SceneReference : ISerializationCallbackReceiver
+    {
 #if UNITY_EDITOR
         [SerializeField] private UnityEditor.SceneAsset _sceneAsset;
-        [SerializeField] private UnityEditor.SceneAsset _prevSceneAsset;
+        //[SerializeField] private UnityEditor.SceneAsset _prevSceneAsset;
 
         public UnityEditor.SceneAsset SceneAsset => _sceneAsset;
 #endif
         public string scenePath;
         public string sceneGUID;
 
-        public bool IsNull => string.IsNullOrEmpty (scenePath) || string.IsNullOrEmpty (sceneGUID);
+        public bool IsNull => string.IsNullOrEmpty(scenePath) || string.IsNullOrEmpty(sceneGUID);
 
         private AsyncOperation _sceneOperation;
         public AsyncOperation SceneOperationHandle => _sceneOperation;
@@ -28,23 +30,27 @@ namespace d4160.SceneManagement {
         /// </summary>
         public bool IsDone => _sceneOperation?.isDone ?? false;
 
-        public AsyncOperation LoadSceneAsync (LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true) {
+        public AsyncOperation LoadSceneAsync(LoadSceneMode loadMode = LoadSceneMode.Single, bool activateOnLoad = true)
+        {
             if (IsDone)
-                Debug.LogError ("Attempting to load Scene that has already been loaded. Operation is exposed through getter SceneOperation");
-            else {
-                _sceneOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync (scenePath, loadMode);
+                Debug.LogError("Attempting to load Scene that has already been loaded. Operation is exposed through getter SceneOperation");
+            else
+            {
+                _sceneOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, loadMode);
                 _sceneOperation.allowSceneActivation = activateOnLoad;
             }
 
             return _sceneOperation;
         }
 
-        public void UnloadSceneAsync () {
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync (scenePath);
+        public void UnloadSceneAsync()
+        {
+            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scenePath);
             _sceneOperation = null;
         }
 
-        public void Clear () {
+        public void Clear()
+        {
             _sceneOperation = null;
         }
 
@@ -91,18 +97,23 @@ namespace d4160.SceneManagement {
         }
 #endif
 
-        public void OnBeforeSerialize () {
+        public void OnBeforeSerialize()
+        {
 #if UNITY_EDITOR
-            if (_sceneAsset && _sceneAsset != _prevSceneAsset) {
-                scenePath = UnityEditor.AssetDatabase.GetAssetOrScenePath (_sceneAsset);
-                sceneGUID = UnityEditor.AssetDatabase.AssetPathToGUID (scenePath);
-            } else {
+            // && _sceneAsset != _prevSceneAsset
+            if (_sceneAsset)
+            {
+                scenePath = UnityEditor.AssetDatabase.GetAssetOrScenePath(_sceneAsset);
+                sceneGUID = UnityEditor.AssetDatabase.AssetPathToGUID(scenePath);
+            }
+            else
+            {
                 scenePath = string.Empty;
                 sceneGUID = string.Empty;
             }
 #endif
         }
 
-        public void OnAfterDeserialize () { }
+        public void OnAfterDeserialize() { }
     }
 }

@@ -15,7 +15,7 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "AUTOHAND"
+        "ENABLE_AUTOHAND"
     ],
     "versionDefines": [],
     "noEngineReferences": false

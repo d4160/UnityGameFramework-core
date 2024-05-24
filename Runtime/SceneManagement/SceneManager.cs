@@ -3,11 +3,13 @@ using d4160.Singleton;
 #if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
 #endif
-using UltEvents;
 using UnityEngine;
+using UnityEngine.Events;
 
-namespace d4160.SceneManagement {
-    public class SceneManager : Singleton<SceneManager> {
+namespace d4160.SceneManagement
+{
+    public class SceneManager : Singleton<SceneManager>
+    {
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Expandable]
@@ -26,75 +28,92 @@ namespace d4160.SceneManagement {
         public SceneManagerSO SceneManagerAsset => _sceneManagerAsset;
 
         [Header("EVENTS")]
-        [SerializeField] private UltEvent<int, string> _onCollectionLoaded;
+        [SerializeField] private UnityEvent<int, string> _onCollectionLoaded;
 
         /* LOAD */
-        public static void LoadSceneCollectionAsync (string label) {
+        public static void LoadSceneCollectionAsync(string label)
+        {
             SceneManager.Instance._sceneManagerAsset?.LoadSceneCollectionAsync(label);
         }
 
-        public static void LoadSceneCollectionAsync (int index) {
+        public static void LoadSceneCollectionAsync(int index)
+        {
             SceneManager.Instance._sceneManagerAsset?.LoadSceneCollectionAsync(index);
         }
 
-        public static void LoadSceneCollectionAsync (string label, AssetManagementType sceneAssetType) {
-            SceneManager.Instance._sceneManagerAsset?.LoadSceneCollectionAsync (label, sceneAssetType);
+        public static void LoadSceneCollectionAsync(string label, AssetManagementType sceneAssetType)
+        {
+            SceneManager.Instance._sceneManagerAsset?.LoadSceneCollectionAsync(label, sceneAssetType);
         }
 
-        public static void LoadSceneCollectionAsync (int index, AssetManagementType sceneAssetType) {
-            SceneManager.Instance._sceneManagerAsset?.LoadSceneCollectionAsync (index, sceneAssetType);
+        public static void LoadSceneCollectionAsync(int index, AssetManagementType sceneAssetType)
+        {
+            SceneManager.Instance._sceneManagerAsset?.LoadSceneCollectionAsync(index, sceneAssetType);
         }
 
         /* CONTINUE */
-        public static void ContinueCollectionLoadAsync (string label) {
+        public static void ContinueCollectionLoadAsync(string label)
+        {
             SceneManager.Instance._sceneManagerAsset?.ContinueCollectionLoadAsync(label);
         }
 
-        public static void ContinueCollectionLoadAsync (int index) {
+        public static void ContinueCollectionLoadAsync(int index)
+        {
             SceneManager.Instance._sceneManagerAsset?.ContinueCollectionLoadAsync(index);
         }
 
-        public static void ContinueCollectionLoadAsync (string label, AssetManagementType sceneAssetType) {
-            SceneManager.Instance._sceneManagerAsset?.ContinueCollectionLoadAsync (label, sceneAssetType);
+        public static void ContinueCollectionLoadAsync(string label, AssetManagementType sceneAssetType)
+        {
+            SceneManager.Instance._sceneManagerAsset?.ContinueCollectionLoadAsync(label, sceneAssetType);
         }
 
-        public static void ContinueCollectionLoadAsync (int index, AssetManagementType sceneAssetType) {
-            SceneManager.Instance._sceneManagerAsset?.ContinueCollectionLoadAsync (index, sceneAssetType);
+        public static void ContinueCollectionLoadAsync(int index, AssetManagementType sceneAssetType)
+        {
+            SceneManager.Instance._sceneManagerAsset?.ContinueCollectionLoadAsync(index, sceneAssetType);
         }
 
         /* UNLOAD */
-        public static void UnloadSceneCollectionAsync (string label) {
+        public static void UnloadSceneCollectionAsync(string label)
+        {
             SceneManager.Instance._sceneManagerAsset?.UnloadSceneCollectionAsync(label);
         }
 
-        public static void UnloadSceneCollectionAsync (int index) {
+        public static void UnloadSceneCollectionAsync(int index)
+        {
             SceneManager.Instance._sceneManagerAsset?.UnloadSceneCollectionAsync(index);
         }
 
-        public static void UnloadSceneCollectionAsync (string label, AssetManagementType sceneAssetType) {
-            SceneManager.Instance._sceneManagerAsset?.UnloadSceneCollectionAsync (label, sceneAssetType);
+        public static void UnloadSceneCollectionAsync(string label, AssetManagementType sceneAssetType)
+        {
+            SceneManager.Instance._sceneManagerAsset?.UnloadSceneCollectionAsync(label, sceneAssetType);
         }
 
-        public static void UnloadSceneCollectionAsync (int index, AssetManagementType sceneAssetType) {
-            SceneManager.Instance._sceneManagerAsset?.UnloadSceneCollectionAsync (index, sceneAssetType);
+        public static void UnloadSceneCollectionAsync(int index, AssetManagementType sceneAssetType)
+        {
+            SceneManager.Instance._sceneManagerAsset?.UnloadSceneCollectionAsync(index, sceneAssetType);
         }
 
-        protected override void Awake () {
+        protected override void Awake()
+        {
             base.Awake();
-            if (_loadSceneAt == UnityLifetimeMethodType.Awake) {
+            if (_loadSceneAt == UnityLifetimeMethodType.Awake)
+            {
                 LoadSceneCollectionAsync(_sceneCollection);
             }
         }
 
-        protected virtual void Start () {
-            if (_loadSceneAt == UnityLifetimeMethodType.Start) {
+        protected virtual void Start()
+        {
+            if (_loadSceneAt == UnityLifetimeMethodType.Start)
+            {
                 LoadSceneCollectionAsync(_sceneCollection);
             }
         }
 
         protected virtual void OnEnable()
         {
-            if (_loadSceneAt == UnityLifetimeMethodType.OnEnable) {
+            if (_loadSceneAt == UnityLifetimeMethodType.OnEnable)
+            {
                 LoadSceneCollectionAsync(_sceneCollection);
             }
 
@@ -114,28 +133,32 @@ namespace d4160.SceneManagement {
             }
         }
 
-        private void OnCollectionLoadedCallback(int index, string label){
+        private void OnCollectionLoadedCallback(int index, string label)
+        {
             _onCollectionLoaded?.Invoke(index, label);
         }
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void LoadSceneCollectionAsync () {
+        public void LoadSceneCollectionAsync()
+        {
             LoadSceneCollectionAsync(_sceneCollection);
         }
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void ContinueCollectionLoadAsync () {
+        public void ContinueCollectionLoadAsync()
+        {
             ContinueCollectionLoadAsync(_sceneCollection);
         }
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void UnloadSceneCollectionAsync () {
+        public void UnloadSceneCollectionAsync()
+        {
             UnloadSceneCollectionAsync(_sceneCollection);
         }
     }
