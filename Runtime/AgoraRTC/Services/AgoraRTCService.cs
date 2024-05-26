@@ -37,10 +37,8 @@ namespace d4160.AgoraRtc
 
             _rtcEngine = Agora.Rtc.RtcEngine.CreateAgoraRtcEngine();
             UserEventHandler handler = new(this);
-            RtcEngineContext context = new(Settings.AppID, Settings.Context,
-                                        Settings.ChannelProfileType,
-                                        Settings.AudioScenarioType);
-            _rtcEngine.Initialize(context);
+
+            _rtcEngine.Initialize(Settings.GetRtcEngineContext());
             _rtcEngine.InitEventHandler(handler);
 
             LogInfo($"[InitRtcEngine] Success");
@@ -92,7 +90,7 @@ namespace d4160.AgoraRtc
 
             if (options == null)
             {
-                RtcEngine.JoinChannel(token, channelName);
+                RtcEngine.JoinChannel(token, channelName, "", 0);
             }
             else
             {
