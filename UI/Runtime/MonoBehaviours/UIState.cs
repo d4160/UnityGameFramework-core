@@ -34,6 +34,11 @@ public class UIState : MonoBehaviour
         _stateMachine.SetActiveState(this, _forceDisable);
     }
 
+    public void ShowState(bool forceDisable)
+    {
+        _stateMachine.SetActiveState(this, forceDisable);
+    }
+
 
 #if ODIN_INSPECTOR
     [Button]
@@ -41,6 +46,11 @@ public class UIState : MonoBehaviour
     public void HideState()
     {
         _stateMachine.RemoveActiveState(this, _forceDisable);
+    }
+
+    public void HideState(bool forceDisable)
+    {
+        _stateMachine.RemoveActiveState(this, forceDisable);
     }
 
 #if ODIN_INSPECTOR
@@ -53,6 +63,13 @@ public class UIState : MonoBehaviour
         _stateMachine.SetActiveStates(_nextStates, _forceDisable);
     }
 
+    public void GoNextState(bool forceDisable)
+    {
+        if (_nextStates == null || _nextStates.Length == 0) return;
+
+        _stateMachine.SetActiveStates(_nextStates, forceDisable);
+    }
+
 #if ODIN_INSPECTOR
     [Button]
 #endif
@@ -61,5 +78,12 @@ public class UIState : MonoBehaviour
         if (_prevStates == null || _prevStates.Length == 0) return;
 
         _stateMachine.SetActiveStates(_prevStates, _forceDisable);
+    }
+
+    public void GoPrevState(bool forceDisable)
+    {
+        if (_prevStates == null || _prevStates.Length == 0) return;
+
+        _stateMachine.SetActiveStates(_prevStates, forceDisable);
     }
 }

@@ -1,10 +1,9 @@
 {
-    "name": "com.d4160.UI",
+    "name": "d4160.Runtime.UI.GameCreator",
     "rootNamespace": "",
     "references": [
-        "GUID:abd02ea2a3d741f48b1c16eb7025fec5",
-        "GUID:ed053b1c1336e5a40a2196e16eb58cd7",
-        "GUID:f3f1532e2b5a9c14e84d5497a2ec90a8"
+        "GUID:7e34cb1fa5e4a2548917bf149355442e",
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

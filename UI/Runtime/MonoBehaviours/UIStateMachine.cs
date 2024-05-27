@@ -74,7 +74,7 @@ public class UIStateMachine : MonoBehaviour
 #if ODIN_INSPECTOR
     [Button]
 #endif
-    private void GoPrevState()
+    public void GoPrevState()
     {
         if (_activeStates == null || _activeStates.Count == 0) return;
 
@@ -84,7 +84,7 @@ public class UIStateMachine : MonoBehaviour
 #if ODIN_INSPECTOR
     [Button]
 #endif
-    private void GoNextState()
+    public void GoNextState()
     {
         if (_activeStates == null || _activeStates.Count == 0) return;
 
