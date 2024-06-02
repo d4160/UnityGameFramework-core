@@ -1,0 +1,18 @@
+{
+    "name": "d4160.Runtime.ReadyPlayerMe",
+    "rootNamespace": "",
+    "references": [
+        "GUID:96af4ea235d92d245a095007c6ca3701"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "READY_PLAYER_ME"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

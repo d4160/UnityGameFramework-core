@@ -1,0 +1,21 @@
+{
+    "name": "d4160.Runtime.ReadyPlayerMe.GameCreator",
+    "rootNamespace": "",
+    "references": [
+        "GUID:051538bfc09416c4db8b3b50defb3321",
+        "GUID:96af4ea235d92d245a095007c6ca3701",
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "ENABLE_GAME_CREATOR",
+        "READY_PLAYER_ME"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
