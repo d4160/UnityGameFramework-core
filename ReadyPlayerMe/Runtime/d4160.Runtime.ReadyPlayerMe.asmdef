@@ -1,10 +1,8 @@
 {
-    "name": "d4160.Runtime.UGS.Authentication",
+    "name": "d4160.Runtime.ReadyPlayerMe",
     "rootNamespace": "",
     "references": [
-        "d4160.Runtime.Core",
-        "Unity.Services.Core",
-        "Unity.Services.Authentication"
+        "GUID:96af4ea235d92d245a095007c6ca3701"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -13,7 +11,7 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "ENABLE_UGS_AUTH"
+        "READY_PLAYER_ME"
     ],
     "versionDefines": [],
     "noEngineReferences": false

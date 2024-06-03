@@ -3,7 +3,9 @@ using UnityEngine;
 using d4160.MonoBehaviours;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 
 namespace d4160.UGS.Authentication
 {

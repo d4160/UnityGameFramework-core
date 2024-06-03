@@ -17,10 +17,18 @@ namespace Gameframework
 
     [Parameter("SceneCollection", "The SceneCollection object to load")]
 
+    [Keywords("Load", "Scene", "Collection")]
+    [Image(typeof(IconUnity), ColorTheme.Type.TextNormal)]
+
     [Serializable]
     public class InstructionScenesLoadCollection : Instruction
     {
         [SerializeField] private SceneCollectionSO m_SceneCollection;
+
+        public override string Title => string.Format(
+            "Load scene collection {0}",
+            this.m_SceneCollection
+        );
 
         protected override Task Run(Args args)
         {

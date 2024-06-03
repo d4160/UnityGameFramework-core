@@ -1,10 +1,9 @@
 {
-    "name": "d4160.Runtime.UGS.Authentication",
+    "name": "d4160.Runtime.UI.GameCreator",
     "rootNamespace": "",
     "references": [
-        "d4160.Runtime.Core",
-        "Unity.Services.Core",
-        "Unity.Services.Authentication"
+        "GUID:7e34cb1fa5e4a2548917bf149355442e",
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -13,7 +12,7 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "ENABLE_UGS_AUTH"
+        "ENABLE_GAME_CREATOR"
     ],
     "versionDefines": [],
     "noEngineReferences": false

@@ -16,7 +16,8 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "ENABLE_GAME_CREATOR"
+        "ENABLE_GAME_CREATOR",
+        "ENABLE_UGS_AUTH"
     ],
     "versionDefines": [],
     "noEngineReferences": false

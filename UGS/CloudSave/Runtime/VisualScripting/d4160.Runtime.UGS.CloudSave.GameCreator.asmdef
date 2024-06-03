@@ -1,10 +1,10 @@
 {
-    "name": "d4160.Runtime.UGS.Authentication",
+    "name": "d4160.Runtime.UGS.CloudSave.GameCreator",
     "rootNamespace": "",
     "references": [
-        "d4160.Runtime.Core",
-        "Unity.Services.Core",
-        "Unity.Services.Authentication"
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320",
+        "GUID:be0d2672886cc45b2bcea5a5053a5347",
+        "GUID:3469be48c3821c14f8df98f1d403e53e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -13,7 +13,8 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "ENABLE_UGS_AUTH"
+        "ENABLE_GAME_CREATOR",
+        "ENABLE_UGS_CLOUDSAVE"
     ],
     "versionDefines": [],
     "noEngineReferences": false
