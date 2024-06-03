@@ -13,6 +13,7 @@ namespace d4160.UGS.Multiplay.AdminAPI
         [SerializeField] private ProjectDataSO _projectData;
         [SerializeField] private MultiplayDataSO _multiplayData;
         [SerializeField] private MultiplaySO _multiplay;
+        [SerializeField] private bool _logUrlAndAuthorizations;
 
         [Button]
         private void SendViewFleetRequest()
@@ -23,6 +24,11 @@ namespace d4160.UGS.Multiplay.AdminAPI
         public void ViewFleet(Action<string> onResult = null, Action<string> onError = null)
         {
             string url = $"https://services.api.unity.com/multiplay/fleets/v1/projects/{_projectData.ProjectId}/environments/{_projectData.EnvironmentId}/fleets/{_multiplayData.FleetId}";
+
+            if (_logUrlAndAuthorizations)
+            {
+                _multiplay.LogInfo($"Url: {url}, Key: {_serviceAccount.KeyBase64}");
+            }
 
             WebRequests.Get(url,
             (UnityWebRequest unityWebRequest) =>
