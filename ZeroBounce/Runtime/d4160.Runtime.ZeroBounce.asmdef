@@ -1,0 +1,20 @@
+{
+    "name": "d4160.Runtime.ZeroBounce",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d8427ce70fe4b1541b2621e0d52a1f6b",
+        "GUID:ed053b1c1336e5a40a2196e16eb58cd7",
+        "GUID:abd02ea2a3d741f48b1c16eb7025fec5",
+        "GUID:3469be48c3821c14f8df98f1d403e53e",
+        "GUID:776d03a35f1b52c4a9aed9f56d7b4229"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
