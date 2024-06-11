@@ -1,0 +1,16 @@
+{
+    "name": "d4160.Runtime.OpenAI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d8427ce70fe4b1541b2621e0d52a1f6b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

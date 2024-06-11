@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Codice.Client.Commands;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -28,6 +29,12 @@ public static class WebRequests
             GameObject gameObject = new GameObject("WebRequests");
             webRequestsMonoBehaviour = gameObject.AddComponent<WebRequestsMonoBehaviour>();
         }
+    }
+
+    public static void StartCoroutine(IEnumerator enumerator)
+    {
+        Init();
+        webRequestsMonoBehaviour.StartCoroutine(enumerator);
     }
 
     public static void Get(string url, Action<string> onError, Action<string> onSuccess)
@@ -78,16 +85,50 @@ public static class WebRequests
         webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePost(url, postData, onError, onSuccess));
     }
 
+    public static void Post(string url, Action<UnityWebRequest> setHeaderAction, Action<string> onError, Action<string> onSuccess)
+    {
+        Init();
+        webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePost(url, setHeaderAction, onError, onSuccess));
+    }
+
     public static void PostJson(string url, string jsonData, Action<string> onError, Action<string> onSuccess)
     {
         Init();
         webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePostJson(url, null, jsonData, onError, onSuccess));
     }
 
-    public static void PostJson(string url, Action<UnityWebRequest> setHeaderAction, string jsonData, Action<string> onError, Action<string> onSuccess)
+    public static void PostJson(string url, Action<UnityWebRequest> setHeaderAction, string jsonData, Action<string> onError, Action<string> onSuccess, bool test = false)
     {
         Init();
-        webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePostJson(url, setHeaderAction, jsonData, onError, onSuccess));
+        webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePostJson(url, setHeaderAction, jsonData, onError, onSuccess, test));
+    }
+
+    private static IEnumerator GetCoroutinePost(string url, Action<UnityWebRequest> setHeaderAction, Action<string> onError, Action<string> onSuccess)
+    {
+        using (UnityWebRequest unityWebRequest = new UnityWebRequest(url, "POST"))
+        {
+            unityWebRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            unityWebRequest.SetRequestHeader("Content-Type", "application/json");
+
+            if (setHeaderAction != null)
+            {
+                setHeaderAction(unityWebRequest);
+            }
+
+            yield return unityWebRequest.SendWebRequest();
+
+            if (unityWebRequest.result == UnityWebRequest.Result.ConnectionError ||
+                unityWebRequest.result == UnityWebRequest.Result.DataProcessingError ||
+                unityWebRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                // Error
+                onError(unityWebRequest.error);
+            }
+            else
+            {
+                onSuccess(unityWebRequest.downloadHandler.text);
+            }
+        }
     }
 
     private static IEnumerator GetCoroutinePost(string url, Dictionary<string, string> formFields, Action<string> onError, Action<string> onSuccess)
@@ -130,7 +171,9 @@ public static class WebRequests
         }
     }
 
-    private static IEnumerator GetCoroutinePostJson(string url, Action<UnityWebRequest> setHeaderAction, string jsonData, Action<string> onError, Action<string> onSuccess)
+    private static UnityWebRequest CurrentRequest;
+
+    private static IEnumerator GetCoroutinePostJson(string url, Action<UnityWebRequest> setHeaderAction, string jsonData, Action<string> onError, Action<string> onSuccess, bool test = false)
     {
         using (UnityWebRequest unityWebRequest = new UnityWebRequest(url, "POST"))
         {
@@ -146,6 +189,16 @@ public static class WebRequests
 
             yield return unityWebRequest.SendWebRequest();
 
+            Debug.Log($"Is done: {unityWebRequest.isDone}");
+
+#if UNITY_EDITOR
+            if (test)
+            {
+                CurrentRequest = unityWebRequest;
+                UnityEditor.EditorApplication.update += CheckRequestProgress;
+            }
+#endif
+
             if (unityWebRequest.result == UnityWebRequest.Result.ConnectionError ||
                 unityWebRequest.result == UnityWebRequest.Result.DataProcessingError ||
                 unityWebRequest.result == UnityWebRequest.Result.ProtocolError)
@@ -157,6 +210,37 @@ public static class WebRequests
             {
                 onSuccess(unityWebRequest.downloadHandler.text);
             }
+        }
+    }
+
+    [System.Serializable]
+    private class ResponseTest
+    {
+        public string id;
+        public string status;
+    }
+
+    private static void CheckRequestProgress()
+    {
+        if (CurrentRequest != null)
+        {
+            try
+            {
+                ResponseTest obj = JsonUtility.FromJson<ResponseTest>(CurrentRequest.downloadHandler.text);
+
+                Debug.Log(obj.status);
+
+                if (obj.status != "queued")
+                {
+                    UnityEditor.EditorApplication.update -= CheckRequestProgress;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Error: {e.Message}");
+                UnityEditor.EditorApplication.update -= CheckRequestProgress;
+            }
+
         }
     }
 

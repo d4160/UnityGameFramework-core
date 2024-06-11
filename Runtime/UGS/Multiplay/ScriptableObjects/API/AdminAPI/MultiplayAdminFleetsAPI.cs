@@ -54,7 +54,7 @@ namespace d4160.UGS.Multiplay.AdminAPI
             string url = $"https://services.api.unity.com/multiplay/fleets/v1/projects/{_projectData.ProjectId}/environments/{_projectData.EnvironmentId}/fleets/{_multiplayData.FleetId}";
 
             string jsonRequest = JsonUtility.ToJson(request);
-            Debug.Log(jsonRequest);
+            //Debug.Log(jsonRequest);
 
             WebRequests.PutJson(url,
             (UnityWebRequest unityWebRequest) =>
