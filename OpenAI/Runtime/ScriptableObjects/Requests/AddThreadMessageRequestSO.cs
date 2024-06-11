@@ -1,4 +1,3 @@
-using Amazon.CognitoIdentity.Model;
 using d4160.Runtime.OpenAI.API;
 using UnityEngine;
 using System;
