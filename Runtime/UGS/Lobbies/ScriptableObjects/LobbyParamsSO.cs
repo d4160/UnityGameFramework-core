@@ -1,5 +1,7 @@
 using d4160.Variables;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 
 namespace d4160.UGS.Lobbies

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Codice.Client.Commands;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -220,6 +219,7 @@ public static class WebRequests
         public string status;
     }
 
+#if UNITY_EDITOR
     private static void CheckRequestProgress()
     {
         if (CurrentRequest != null)
@@ -243,6 +243,7 @@ public static class WebRequests
 
         }
     }
+#endif
 
     public static void Put(string url, string bodyData, Action<string> onError, Action<string> onSuccess)
     {
