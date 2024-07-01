@@ -1,7 +1,7 @@
 using d4160.Runtime.UI;
 using UnityEngine;
 using Unity.Services.Authentication;
-
+using System;
 
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
@@ -18,14 +18,20 @@ namespace d4160.UGS.Authentication
 
         protected override void AddInitialStates()
         {
-            if (Application.isPlaying && AuthenticationService.Instance.IsSignedIn)
-            {
-                for (int i = 0; i < _authStates.Length; i++)
+            try {
+                if (Application.isPlaying && AuthenticationService.Instance.IsSignedIn)
                 {
-                    AddActiveState(_authStates[i]);
+                    for (int i = 0; i < _authStates.Length; i++)
+                    {
+                        AddActiveState(_authStates[i]);
+                    }
+                }
+                else
+                {
+                    base.AddInitialStates();
                 }
             }
-            else
+            catch (Exception ex)
             {
                 base.AddInitialStates();
             }
