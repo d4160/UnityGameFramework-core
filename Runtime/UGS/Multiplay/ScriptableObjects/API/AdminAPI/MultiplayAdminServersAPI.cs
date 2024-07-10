@@ -1,7 +1,9 @@
 using System;
 using d4160.UGS.Core;
 using d4160.UGS.Multiplay.LifecycleAPI;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -21,7 +23,9 @@ namespace d4160.UGS.Multiplay.AdminAPI
         [SerializeField] private ProjectDataSO _projectData;
         [SerializeField] private MultiplaySO _multiplay;
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         private void ListServers()
         {
             ListServers(null);

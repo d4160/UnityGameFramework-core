@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 
 namespace d4160.UGS.Multiplay.LifecycleAPI
@@ -39,7 +41,9 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
             };
         }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         public void SendRequest()
         {
             SendRequest((result) =>

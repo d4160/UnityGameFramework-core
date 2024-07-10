@@ -1,4 +1,5 @@
 using System;
+using d4160.Logging;
 using d4160.UGS.Core;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,7 +13,7 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
         [SerializeField] private MultiplayDataSO _multiplayData;
         [SerializeField] private TokenAPI _tokenAPI;
         [SerializeField] private TokenExchangeRequestSO _tokenExchangeRequest;
-        [SerializeField] private MultiplaySO _multiplay;
+        [SerializeField] private LoggerSO _logger;
 
         public void QueueAllocation(QueueAllocationRequest request, Action<string> onResult = null, Action<string> onError = null)
         {
@@ -26,7 +27,8 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
         {
             string url = $"https://multiplay.services.api.unity.com/v1/allocations/projects/{_projectData.ProjectId}/environments/{_projectData.EnvironmentId}/fleets/{_multiplayData.FleetId}/allocations";
 
-            _multiplay.LogInfo($"AllocationId: {request.allocationId}");
+            if (_logger)
+                _logger.LogInfo($"AllocationId: {request.allocationId}");
 
             WebRequests.PostJson(url,
             (UnityWebRequest unityWebRequest) =>
@@ -36,13 +38,15 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
             JsonUtility.ToJson(request),
             (string error) =>
             {
-                _multiplay.LogError("Error: " + error);
+                if (_logger)
+                    _logger.LogError("Error: " + error);
 
                 onError?.Invoke(error);
             },
             (string json) =>
             {
-                _multiplay.LogInfo("Success: " + json);
+                if (_logger)
+                    _logger.LogInfo("Success: " + json);
 
                 onResult?.Invoke(request.allocationId);
             });
@@ -67,13 +71,15 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
             },
             (string error) =>
             {
-                _multiplay.LogError("Error: " + error);
+                if (_logger)
+                    _logger.LogError("Error: " + error);
 
                 onError?.Invoke(error);
             },
             (string json) =>
             {
-                _multiplay.LogInfo("Success: " + json);
+                if (_logger)
+                    _logger.LogInfo("Success: " + json);
 
                 onResult?.Invoke(json);
             });
@@ -91,7 +97,8 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
         {
             string url = $"https://multiplay.services.api.unity.com/v1/allocations/projects/{_projectData.ProjectId}/environments/{_projectData.EnvironmentId}/fleets/{_multiplayData.FleetId}/allocations{request.GetQueryParameters()}";
 
-            //_multiplay.LogInfo($"AllocationId: {request.allocationId}");
+            // if (_multiplay)//
+            //     _multiplay.LogInfo($"AllocationId: {request.allocationId}");
 
             WebRequests.Get(url,
             (UnityWebRequest unityWebRequest) =>
@@ -100,13 +107,15 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
             },
             (string error) =>
             {
-                _multiplay.LogError("Error: " + error);
+                if (_logger)
+                    _logger.LogError("Error: " + error);
 
                 onError?.Invoke(error);
             },
             (string json) =>
             {
-                _multiplay.LogInfo("Success: " + json);
+                if (_logger)
+                    _logger.LogInfo("Success: " + json);
 
                 AllocationList allocationsList = JsonUtility.FromJson<AllocationList>(json);
 
@@ -138,13 +147,15 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
         //     },
         //     (string error) =>
         //     {
-        //         _multiplay.LogError("Error: " + error);
+        // if (_multiplay)//         
+        //     _multiplay.LogError("Error: " + error);
 
         //         onError?.Invoke(error);
         //     },
         //     (string json) =>
         //     {
-        //         _multiplay.LogInfo("Success: " + json);
+        // if (_multiplay)//         
+        //     _multiplay.LogInfo("Success: " + json);
 
         //         onResult?.Invoke(json);
         //     });
