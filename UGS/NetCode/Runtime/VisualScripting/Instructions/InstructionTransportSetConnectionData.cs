@@ -19,7 +19,9 @@ namespace d4160.Runtime.UGS.NetCode
 
     [Image(typeof(IconLineStartEnd), ColorTheme.Type.Blue)]
 
-    [Parameter("Key", "If not split, the CloudSave key for all variables to save as")]
+    [Parameter("IpAddress", "The ip address of server")]
+    [Parameter("Port", "The port of server")]
+    [Parameter("ListenAddress", "The address to listen from. 0.0.0.0 means everyone.")]
 
     [Serializable]
     public class InstructionTransportSetConnectionData : Instruction
