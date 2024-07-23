@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 namespace d4160.Runtime.OpenAI.API
 {
@@ -95,7 +96,7 @@ namespace d4160.Runtime.OpenAI.API
             });
         }
 
-        public static void ListThreadMessages(string threadId, string apiKey, Action<string> onError, Action<string> onSuccess)
+        public static void ListThreadMessages(string threadId, string apiKey, Action<string> onError, Action<MessageListObject> onSuccess)
         {
             string url = $"https://api.openai.com/v1/threads/{threadId}/messages";
 
@@ -110,9 +111,11 @@ namespace d4160.Runtime.OpenAI.API
                 onError?.Invoke(err);
             }, (res) =>
             {
-                Debug.Log(res);
-                //ValidateResponse response = JsonUtility.FromJson<ValidateResponse>(res);
-                onSuccess?.Invoke(res);
+                MessageListObject response = JsonUtility.FromJson<MessageListObject>(res);
+
+                Debug.Log(JsonConvert.SerializeObject(response));
+
+                onSuccess?.Invoke(response);
             });
         }
     }
