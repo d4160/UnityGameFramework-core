@@ -4,7 +4,7 @@ using d4160.Persistence;
 using d4160.Variables;
 using UnityEngine;
 
-namespace d4160.UIs
+namespace d4160.Runtime.UI
 {
     public abstract class UISettings<T> : MonoBehaviour
     {

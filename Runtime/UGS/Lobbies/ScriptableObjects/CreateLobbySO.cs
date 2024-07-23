@@ -1,4 +1,6 @@
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using System.Threading.Tasks;
 using Unity.Services.Lobbies;
 using UnityEngine;

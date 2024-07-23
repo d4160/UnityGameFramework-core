@@ -1,7 +1,9 @@
 using d4160.MonoBehaviours;
 using UnityEngine;
 using d4160.Loops;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using Unity.Services.Authentication;
 #if ENABLE_QUANTUM_CONSOLE
 using QFSW.QC;

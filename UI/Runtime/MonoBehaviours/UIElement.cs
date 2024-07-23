@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace d4160.UIs
+namespace d4160.Runtime.UI
 {
     public abstract class UIElement<TColl, TData> : UIElement<TData> where TColl : UICollection
     {

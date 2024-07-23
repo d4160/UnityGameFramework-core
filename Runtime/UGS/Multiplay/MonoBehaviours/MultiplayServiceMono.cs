@@ -4,7 +4,9 @@ using d4160.Events;
 using d4160.Loops;
 using d4160.Singleton;
 using d4160.UGS.Multiplay.LifecycleAPI;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using Unity.Netcode;
 using Unity.Services.Core;
 using Unity.Services.Multiplay;
@@ -115,6 +117,8 @@ namespace d4160.UGS.Multiplay
 
                                 _autoRemoveAllocationTimer = _autoRemoveAllocationMaxTime * 3.1f;
                                 _isSentRemoveAllocationRequest = true;
+
+                                Debug.Log("Allocation shutdown since no players!");
                             }
                         }
                     }

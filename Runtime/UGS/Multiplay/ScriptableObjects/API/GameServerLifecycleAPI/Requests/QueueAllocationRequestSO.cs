@@ -1,5 +1,7 @@
 using System;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 
 namespace d4160.UGS.Multiplay.LifecycleAPI
@@ -8,7 +10,11 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
     public class QueueAllocationRequestSO : ScriptableObject
     {
         [SerializeField] private bool _newUuidForAllocation;
-        [SerializeField, HideIf("_newUuidForAllocation")] private string _allocationId;
+        [SerializeField]
+#if ENABLE_NAUGHTY_ATTRIBUTES
+        [HideIf("_newUuidForAllocation")]
+#endif
+        private string _allocationId;
         [SerializeField] private int _buildConfigurationId;
         [SerializeField] private string _payload;
         [SerializeField] private string _regionId;
@@ -42,7 +48,9 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
             };
         }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         public void SendRequest()
         {
             SendRequest();

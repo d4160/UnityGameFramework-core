@@ -2,143 +2,150 @@ using System.Collections.Generic;
 using UnityEngine;
 using d4160.Collections;
 
-
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #endif
 
-public class UIStateMachine : MonoBehaviour
+namespace d4160.Runtime.UI
 {
-    [SerializeField] protected bool _disableAllStatesOnEnable = true;
+    public class UIStateMachine : MonoBehaviour
+    {
+        [SerializeField] protected bool _disableAllStatesOnEnable = true;
 
 #if ODIN_INSPECTOR
-    [ValueDropdown("_states")]
+        [ValueDropdown("_states")]
 #endif
-    [SerializeField] protected UIState[] _initialStates;
+        [SerializeField] protected UIState[] _initialStates;
 
-    [Header("States")]
-    [SerializeField] protected UIState[] _states;
+        [Header("States")]
+        [SerializeField] protected UIState[] _states;
 
-    [SerializeField] protected List<UIState> _activeStates = new();
+        [SerializeField] protected List<UIState> _activeStates = new();
 
-    public UIState[] States => _states;
-    public List<UIState> ActiveStates => _activeStates;
+        public UIState[] States => _states;
+        public List<UIState> ActiveStates => _activeStates;
 
-    protected virtual void OnEnable()
-    {
-        SetupStates();
-    }
-
-#if ODIN_INSPECTOR
-    [Button]
-#endif
-    private void SetupStates()
-    {
-        _activeStates.Clear();
-
-        for (int i = 0; i < _states.Length; i++)
+        protected virtual void OnEnable()
         {
-            _states[i].StateMachine = this;
+            SetupStates();
+        }
 
-            if (_disableAllStatesOnEnable)
+#if ODIN_INSPECTOR
+        [Button]
+#endif
+        private void SetupStates()
+        {
+            _activeStates.Clear();
+
+            for (int i = 0; i < _states.Length; i++)
             {
-                if (!_states[i].LockDisable)
+                _states[i].StateMachine = this;
+
+                if (_disableAllStatesOnEnable)
                 {
-                    _states[i].gameObject.SetActive(false);
+                    if (!_states[i].LockDisable)
+                    {
+                        _states[i].gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        AddStateIfActive(_states[i]);
+                    }
                 }
                 else
                 {
                     AddStateIfActive(_states[i]);
                 }
             }
-            else
+
+            AddInitialStates();
+        }
+
+        protected virtual void AddInitialStates()
+        {
+            for (int i = 0; i < _initialStates.Length; i++)
             {
-                AddStateIfActive(_states[i]);
+                AddActiveState(_initialStates[i]);
             }
         }
 
-        for (int i = 0; i < _initialStates.Length; i++)
+#if ODIN_INSPECTOR
+        [Button]
+#endif
+        protected virtual void ShowInitialStates()
         {
-            AddActiveState(_initialStates[i]);
+            SetActiveStates(_initialStates);
         }
-    }
 
 #if ODIN_INSPECTOR
-    [Button]
+        [Button]
 #endif
-    private void ShowInitialStates()
-    {
-        SetActiveStates(_initialStates);
-    }
+        public void GoPrevState()
+        {
+            if (_activeStates == null || _activeStates.Count == 0) return;
+
+            _activeStates.Last().GoPrevState();
+        }
 
 #if ODIN_INSPECTOR
-    [Button]
+        [Button]
 #endif
-    public void GoPrevState()
-    {
-        if (_activeStates == null || _activeStates.Count == 0) return;
-
-        _activeStates.Last().GoPrevState();
-    }
-
-#if ODIN_INSPECTOR
-    [Button]
-#endif
-    public void GoNextState()
-    {
-        if (_activeStates == null || _activeStates.Count == 0) return;
-
-        _activeStates.Last().GoNextState();
-    }
-
-    private void AddStateIfActive(UIState state)
-    {
-        if (state.isActiveAndEnabled)
+        public void GoNextState()
         {
-            _activeStates.Add(state);
+            if (_activeStates == null || _activeStates.Count == 0) return;
+
+            _activeStates.Last().GoNextState();
         }
-    }
 
-    public void DisableAllActiveStates(bool forceDisable = false)
-    {
-        for (int i = _activeStates.Count - 1; i >= 0; i--)
+        private void AddStateIfActive(UIState state)
         {
-            RemoveActiveState(_activeStates[i], forceDisable);
+            if (state.isActiveAndEnabled)
+            {
+                _activeStates.Add(state);
+            }
         }
-    }
 
-    public void SetActiveStates(UIState[] states, bool forceDisable = false)
-    {
-        DisableAllActiveStates(forceDisable);
-
-        for (int i = 0; i < states.Length; i++)
+        public void DisableAllActiveStates(bool forceDisable = false)
         {
-            AddActiveState(states[i]);
+            for (int i = _activeStates.Count - 1; i >= 0; i--)
+            {
+                RemoveActiveState(_activeStates[i], forceDisable);
+            }
         }
-    }
 
-    public void SetActiveState(UIState state, bool forceDisable = false)
-    {
-        DisableAllActiveStates(forceDisable);
-
-        AddActiveState(state);
-    }
-
-    public void AddActiveState(UIState state)
-    {
-        if (!_activeStates.Contains(state))
+        public void SetActiveStates(UIState[] states, bool forceDisable = false)
         {
-            state.gameObject.SetActive(true);
-            _activeStates.Add(state);
+            DisableAllActiveStates(forceDisable);
+
+            for (int i = 0; i < states.Length; i++)
+            {
+                AddActiveState(states[i]);
+            }
         }
-    }
 
-    public void RemoveActiveState(UIState state, bool forceDisable = false)
-    {
-        if (_activeStates.Contains(state) && (!state.LockDisable || forceDisable))
+        public void SetActiveState(UIState state, bool forceDisable = false)
         {
-            state.gameObject.SetActive(false);
-            _activeStates.Remove(state);
+            DisableAllActiveStates(forceDisable);
+
+            AddActiveState(state);
+        }
+
+        public void AddActiveState(UIState state)
+        {
+            if (!_activeStates.Contains(state))
+            {
+                state.gameObject.SetActive(true);
+                _activeStates.Add(state);
+            }
+        }
+
+        public void RemoveActiveState(UIState state, bool forceDisable = false)
+        {
+            if (_activeStates.Contains(state) && (!state.LockDisable || forceDisable))
+            {
+                state.gameObject.SetActive(false);
+                _activeStates.Remove(state);
+            }
         }
     }
 }

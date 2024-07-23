@@ -2,7 +2,7 @@ using d4160.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace d4160.UIs
+namespace d4160.Runtime.UI
 {
     public abstract class UICollection<TCollec, TElem, TData> : UICollection where TElem : UIElement<TCollec, TData> where TCollec : UICollection<TCollec, TElem, TData>
     {
