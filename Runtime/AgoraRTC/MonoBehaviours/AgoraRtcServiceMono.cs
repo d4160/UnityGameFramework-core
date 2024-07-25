@@ -23,7 +23,7 @@ namespace d4160.AgoraRtc
             {
                 if (!_instance)
                 {
-                    _instance = FindObjectOfType<AgoraRtcServiceMono>();
+                    _instance = FindFirstObjectByType<AgoraRtcServiceMono>();
                 }
                 return _instance;
             }

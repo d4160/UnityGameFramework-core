@@ -105,6 +105,17 @@ namespace d4160.AgoraRtc
             EnableStaticVideoSurface(_usersRuntimeSet.LocalUid == userId ? 0 : userId, false, index, isScreenCapture);
         }
 
+        public void SetAllStaticVideoSurfaceByIndex(int index, uint userId, bool isScreenCapture = false)
+        {
+            for (int i = 0; i < StaticVideoSurfaces.Count; i++)
+            {
+                if (i != index)
+                {
+                    EnableStaticVideoSurface(_usersRuntimeSet.LocalUid == userId ? 0 : userId, false, i, isScreenCapture);
+                }
+            }
+        }
+
         public void EnableStaticVideoSurface(uint userId = 0, bool removeFromList = true, int index = 0, bool isScreenCapture = false)
         {
             //Debug.Log($"[EnableStaticVideoSurface]");
@@ -307,6 +318,17 @@ namespace d4160.AgoraRtc
                     {
                         vSurface.gameObject.SetActive(false);
                     });
+                }
+            }
+        }
+
+        public void UnsetAllStaticVideoSurfaceByIndex(int index)
+        {
+            for (int i = 0; i < StaticVideoSurfaces.Count; i++)
+            {
+                if (i != index)
+                {
+                    DisableStaticVideoSurfaceByIndex(i, _desactiveVSurfaceOnDisableVar);
                 }
             }
         }

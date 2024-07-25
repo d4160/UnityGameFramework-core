@@ -1,4 +1,5 @@
 using d4160.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -111,6 +112,18 @@ namespace d4160.UIs
                 _items[i].transform.SetAsLastSibling();
                 _stack.Enqueue(_items[i]);
                 _items.RemoveAt(i);
+            }
+        }
+
+        public void DisableInstance(Func<TData, bool> compare)
+        {
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (compare.Invoke(_items[i].Data))
+                {
+                    DisableInstance(_items[i]);
+                    break;
+                }
             }
         }
 
