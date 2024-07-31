@@ -2,7 +2,8 @@
     "name": "d4160.Runtime.OpenAI",
     "rootNamespace": "",
     "references": [
-        "GUID:d8427ce70fe4b1541b2621e0d52a1f6b"
+        "GUID:d8427ce70fe4b1541b2621e0d52a1f6b",
+        "GUID:ed053b1c1336e5a40a2196e16eb58cd7"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

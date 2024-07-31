@@ -96,9 +96,9 @@ namespace d4160.Runtime.OpenAI.API
             });
         }
 
-        public static void ListThreadMessages(string threadId, string apiKey, Action<string> onError, Action<MessageListObject> onSuccess)
+        public static void ListThreadMessages(string threadId, string apiKey, string queryParams, Action<string> onError, Action<MessageListObject> onSuccess)
         {
-            string url = $"https://api.openai.com/v1/threads/{threadId}/messages";
+            string url = $"https://api.openai.com/v1/threads/{threadId}/messages{queryParams}";
 
             WebRequests.Get(url, (webRequest) =>
             {

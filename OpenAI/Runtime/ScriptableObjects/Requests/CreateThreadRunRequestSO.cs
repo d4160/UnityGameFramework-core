@@ -2,6 +2,8 @@ using d4160.Runtime.OpenAI.API;
 using UnityEngine;
 using System;
 using System.Collections;
+using d4160.Coroutines;
+
 
 
 #if ODIN_INSPECTOR
@@ -24,6 +26,8 @@ namespace d4160.Runtime.OpenAI.ScriptableObjects
         [TextArea]
         [SerializeField] private string _instructions;
 
+        public string ThreadId { get => _threadId; set => _threadId = value; }
+
         public CreateThreadRunRequest GetRequest() => new(_assistant_id, _instructions);
 
         private WaitForSeconds _waitForSeconds;
@@ -36,36 +40,44 @@ namespace d4160.Runtime.OpenAI.ScriptableObjects
         {
             SendRequest(_threadId, _settingsSO.ApiKey, (res) =>
             {
-                _checkingRun = true;
-                WebRequests.StartCoroutine(PollAndListCo(res.id));
+                //WebRequests.StartCoroutine
+                PollAndList(res.id);
             }, (err) => { }, true);
         }
 
-        private IEnumerator PollAndListCo(string runId)
+        public void PollAndList(string runId, Action<MessageListObject> onResponse = null, Action<string> onError = null)
         {
             if (_waitForSeconds == null)
             {
                 _waitForSeconds = new WaitForSeconds(_settingsSO.ChecksDelay);
             }
 
-            while (_checkingRun)
-            {
-                yield return _waitForSeconds;
-
-                _retrieveRunRequest.SendRequest(runId, (response) =>
-                {
-                    if (response.IsDone)
-                    {
-                        _checkingRun = false;
-
-                        if (response.IsCompleted)
-                        {
-                            _listMessagesRequest.SendRequest();
-                        }
-                    }
-                });
-            }
+            WebRequests.StartCoroutine(RetrieveThreadRunRequest(runId, onResponse, onError));
         }
+
+        private IEnumerator RetrieveThreadRunRequest(string runId, Action<MessageListObject> onResponse = null, Action<string> onError = null)
+        {
+            yield return _waitForSeconds;
+
+            _retrieveRunRequest.SendRequest(runId, (response) =>
+            {
+                Debug.Log(response.status);
+
+                if (response.IsDone)
+                {
+                    if (response.IsCompleted)
+                    {
+                        _listMessagesRequest.QueryParams.run_id = runId;
+                        _listMessagesRequest.SendRequest(onResponse, onError);
+                    }
+                }
+                else
+                {
+                    WebRequests.StartCoroutine(RetrieveThreadRunRequest(runId, onResponse, onError));
+                }
+            });
+        }
+
 
         public void SendRequest(string threadId, Action<RunObject> onResponse, Action<string> onError = null)
         {

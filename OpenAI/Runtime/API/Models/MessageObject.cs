@@ -11,7 +11,14 @@ namespace d4160.Runtime.OpenAI.API
         public string thread_id;
         public string run_id;
         public string role;
-        public MessageContent[] content;
+        public MessageContent[] content; // Single object
+    }
+
+    public enum MessageRole
+    {
+        none,
+        assistant,
+        user
     }
 
     [System.Serializable]
