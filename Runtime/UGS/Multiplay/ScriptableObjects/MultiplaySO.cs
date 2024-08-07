@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using d4160.Events;
 using d4160.Logging;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 #if DEDICATED_SERVER
@@ -11,46 +13,46 @@ using UnityEngine;
 
 namespace d4160.UGS.Multiplay
 {
-    [CreateAssetMenu(menuName = "d4160/UGS/Multiplay/Multiplay")]
-    public class MultiplaySO : ScriptableObject
-    {
-        [SerializeField] private ServerQueryOptionsSO _serverQueryOptions;
+        [CreateAssetMenu(menuName = "d4160/UGS/Multiplay/Multiplay")]
+        public class MultiplaySO : ScriptableObject
+        {
+                [SerializeField] private ServerQueryOptionsSO _serverQueryOptions;
 
 #if DEDICATED_SERVER
         [Header("Events")]
         [SerializeField] private MultiplayEventCallbacksSO _eventCallbacks;
 #endif
-        [SerializeField] private VoidEventSO _onServerStarted;
+                [SerializeField] private VoidEventSO _onServerStarted;
 
-        [Header("Log")]
+                [Header("Log")]
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Expandable]
 #endif
-        [SerializeField] LoggerSO _logger;
+                [SerializeField] LoggerSO _logger;
 
 #if DEDICATED_SERVER
         public IServerQueryHandler ServerQueryHandler => _serverQueryHandler;
 #endif
-        public VoidEventSO OnServerStarted => _onServerStarted;
-        public LoggerSO Logger => _logger;
+                public VoidEventSO OnServerStarted => _onServerStarted;
+                public LoggerSO Logger => _logger;
 
 #if DEDICATED_SERVER
         private IServerEvents _serverEvents;
 #endif
-        private bool _alreadyAutoAllocated;
+                private bool _alreadyAutoAllocated;
 #if DEDICATED_SERVER
         private IServerQueryHandler _serverQueryHandler;
         private MultiplayAllocationEventSO.EventListener _onAllocateLtn;
 #endif
 
-        public async void SubscribeEvents()
-        {
-            await SubscribeEventsAsync();
-        }
+                public async void SubscribeEvents()
+                {
+                        await SubscribeEventsAsync();
+                }
 
-        public async Task SubscribeEventsAsync()
-        {
-            LogInfo("Calling SubscribeToServerEventsAsync");
+                public async Task SubscribeEventsAsync()
+                {
+                        LogInfo("Calling SubscribeToServerEventsAsync");
 
 #if DEDICATED_SERVER
             _onAllocateLtn = new(MultiplayEventCallbacks_Allocate);
@@ -63,17 +65,17 @@ namespace d4160.UGS.Multiplay
             LogInfo("SubscribeToServerEventsAsync was called");
             Debug.Log(_serverEvents.ToString());
 #endif
-        }
+                }
 
-        public async void UnsubscribeEvents()
-        {
+                public async void UnsubscribeEvents()
+                {
 #if DEDICATED_SERVER
             await UnsubscribeEventsAsync();
 #endif
-        }
+                }
 
-        public async Task UnsubscribeEventsAsync()
-        {
+                public async Task UnsubscribeEventsAsync()
+                {
 #if DEDICATED_SERVER
             _eventCallbacks.OnAllocate.RemoveListener(_onAllocateLtn);
 
@@ -82,7 +84,7 @@ namespace d4160.UGS.Multiplay
                 await _serverEvents.UnsubscribeAsync();
             }
 #endif
-        }
+                }
 
 #if DEDICATED_SERVER
         public async Task StartServerAsync()
@@ -143,19 +145,19 @@ namespace d4160.UGS.Multiplay
 #endif
 
 
-        public void LogInfo(string message, GameObject context = null)
-        {
-            if (_logger) _logger.LogInfo(message, context);
-        }
+                public void LogInfo(string message, GameObject context = null)
+                {
+                        if (_logger) _logger.LogInfo(message, context);
+                }
 
-        public void LogWarning(string message, GameObject context = null)
-        {
-            if (_logger) _logger.LogWarning(message, context);
-        }
+                public void LogWarning(string message, GameObject context = null)
+                {
+                        if (_logger) _logger.LogWarning(message, context);
+                }
 
-        public void LogError(string message, GameObject context = null)
-        {
-            if (_logger) _logger.LogError(message, context);
+                public void LogError(string message, GameObject context = null)
+                {
+                        if (_logger) _logger.LogError(message, context);
+                }
         }
-    }
 }

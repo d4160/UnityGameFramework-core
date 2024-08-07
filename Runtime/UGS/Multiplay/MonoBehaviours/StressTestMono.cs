@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using d4160.Coroutines;
 using d4160.UGS.Multiplay.LifecycleAPI;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,7 +45,9 @@ public class StressTestMono : NetworkBehaviour
         _instancesNumberIpf.text = _objsCount.ToString();
     }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
     [Button]
+#endif
     [ContextMenu("ServerStressTest")]
     public void ServerStressTest()
     {
@@ -73,7 +77,9 @@ public class StressTestMono : NetworkBehaviour
         }
     }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
     [Button]
+#endif
     [ContextMenu("RemoveServers")]
     public void RemoveServers()
     {
@@ -106,7 +112,9 @@ public class StressTestMono : NetworkBehaviour
         }
     }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
     [Button]
+#endif
     [ContextMenu("PlayersStressTest")]
     public void PlayersStressTest()
     {

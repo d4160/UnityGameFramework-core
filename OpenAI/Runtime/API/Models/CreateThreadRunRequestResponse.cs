@@ -8,11 +8,13 @@ namespace d4160.Runtime.OpenAI.API
         public string assistant_id;
         [TextArea]
         public string instructions;
+        public bool stream;
 
-        public CreateThreadRunRequest(string assistant_id, string instructions)
+        public CreateThreadRunRequest(string assistant_id, string instructions, bool stream)
         {
             this.instructions = instructions;
             this.assistant_id = assistant_id;
+            this.stream = stream;
         }
 
         public string ToJson() => JsonUtility.ToJson(this);

@@ -1,6 +1,8 @@
 using System;
 using d4160.UGS.Core;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,7 +17,9 @@ namespace d4160.UGS.Multiplay.AdminAPI
         [SerializeField] private MultiplaySO _multiplay;
         [SerializeField] private bool _logUrlAndAuthorizations;
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         private void SendViewFleetRequest()
         {
             ViewFleet();

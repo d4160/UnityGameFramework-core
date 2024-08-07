@@ -20,6 +20,8 @@ namespace d4160.Runtime.OpenAI.ScriptableObjects
         [TextArea]
         [SerializeField] private string _content;
 
+        public string ThreadId { get => _threadId; set => _threadId = value; }
+
         public AddThreadMessageRequest GetRequest() => new(_role, _content);
 
 #if ODIN_INSPECTOR
@@ -38,6 +40,11 @@ namespace d4160.Runtime.OpenAI.ScriptableObjects
         public void SendRequest(string threadId, string role, string content, Action<string> onResponse, Action<string> onError = null)
         {
             SendRequest(threadId, _settingsSO.ApiKey, role, content, onResponse, onError);
+        }
+
+        public void SendRequestWithContent(string content, Action<string> onResponse, Action<string> onError = null)
+        {
+            SendRequest(_threadId, _settingsSO.ApiKey, _role, content, onResponse, onError);
         }
 
         public void SendRequestWithContent(string role, string content, Action<string> onResponse, Action<string> onError = null)

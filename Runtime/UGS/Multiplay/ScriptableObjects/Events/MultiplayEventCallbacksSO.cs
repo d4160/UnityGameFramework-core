@@ -1,6 +1,8 @@
 #if DEDICATED_SERVER
 using d4160.Logging;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using Unity.Services.Multiplay;
 using UnityEngine;
 

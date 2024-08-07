@@ -1,0 +1,22 @@
+{
+    "name": "d4160.Runtime.UGS.NetCode.GameCreator",
+    "rootNamespace": "",
+    "references": [
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320",
+        "GUID:3469be48c3821c14f8df98f1d403e53e",
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "ENABLE_GAME_CREATOR",
+        "ENABLE_UGS_NETCODE"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

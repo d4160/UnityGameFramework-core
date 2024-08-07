@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using d4160.Runtime.Networking;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -100,6 +101,12 @@ public static class WebRequests
     {
         Init();
         webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePostJson(url, setHeaderAction, jsonData, onError, onSuccess, test));
+    }
+
+    public static void PostJsonWithStream(string url, Action<UnityWebRequest> setHeaderAction, string jsonData, Action<string> onError, Action<string> onSuccess, Action<string> onStreamEvent)
+    {
+        Init();
+        webRequestsMonoBehaviour.StartCoroutine(GetCoroutinePostJsonEventStream(url, setHeaderAction, jsonData, onError, onSuccess, onStreamEvent));
     }
 
     private static IEnumerator GetCoroutinePost(string url, Action<UnityWebRequest> setHeaderAction, Action<string> onError, Action<string> onSuccess)
@@ -207,6 +214,47 @@ public static class WebRequests
             }
             else
             {
+                onSuccess(unityWebRequest.downloadHandler.text);
+            }
+        }
+    }
+
+    private static IEnumerator GetCoroutinePostJsonEventStream(string url, Action<UnityWebRequest> setHeaderAction, string jsonData, Action<string> onError, Action<string> onSuccess, Action<string> onStreamEvent)
+    {
+        using (UnityWebRequest unityWebRequest = new UnityWebRequest(url, "POST"))
+        {
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+            unityWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+            //unityWebRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+
+            EventStreamDownloadHandler downloadHandler = new EventStreamDownloadHandler((receivedData) =>
+            {
+                onStreamEvent?.Invoke(receivedData);
+            });
+
+            unityWebRequest.downloadHandler = downloadHandler;
+
+            unityWebRequest.SetRequestHeader("Content-Type", "application/json");
+
+            if (setHeaderAction != null)
+            {
+                setHeaderAction(unityWebRequest);
+            }
+
+            yield return unityWebRequest.SendWebRequest();
+
+            Debug.Log($"Is done: {unityWebRequest.isDone}");
+
+            if (unityWebRequest.result == UnityWebRequest.Result.ConnectionError ||
+                unityWebRequest.result == UnityWebRequest.Result.DataProcessingError ||
+                unityWebRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                // Error
+                onError(unityWebRequest.error);
+            }
+            else
+            {
+                Debug.Log(unityWebRequest.downloadHandler.text);
                 onSuccess(unityWebRequest.downloadHandler.text);
             }
         }

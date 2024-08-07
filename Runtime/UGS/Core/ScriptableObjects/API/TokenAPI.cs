@@ -11,7 +11,7 @@ namespace d4160.UGS.Multiplay
     {
         [SerializeField] private ServiceAccountSO _serviceAccount;
         [SerializeField] private ProjectDataSO _projectData;
-        [SerializeField] private LoggerSO _multiplay;
+        [SerializeField] private LoggerSO _logger;
 
         public void TokenExchange(TokenExchangeRequest request, Action<TokenExchangeResponse> onResult, Action<string> onError = null)
         {
@@ -27,13 +27,13 @@ namespace d4160.UGS.Multiplay
             jsonRequestBody,
             (string error) =>
             {
-                _multiplay.LogError("Error: " + error);
+                if (_logger) _logger.LogError("Error: " + error);
 
                 onError?.Invoke(error);
             },
             (string json) =>
             {
-                _multiplay.LogInfo("Success: " + json);
+                if (_logger) _logger.LogInfo("Success: " + json);
                 TokenExchangeResponse tokenExchangeResponse = JsonUtility.FromJson<TokenExchangeResponse>(json);
 
                 onResult?.Invoke(tokenExchangeResponse);

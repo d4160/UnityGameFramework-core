@@ -4,7 +4,8 @@
     "references": [
         "d4160.Runtime.Core",
         "Unity.Services.Core",
-        "Unity.Services.Authentication"
+        "Unity.Services.Authentication",
+        "d4160.Runtime.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,0 +1,23 @@
+{
+    "name": "d4160.Runtime.UGS.Multiplay.GameCreator",
+    "rootNamespace": "",
+    "references": [
+        "GUID:406c89e0bc84d48f4b079c3c4cd13320",
+        "GUID:3469be48c3821c14f8df98f1d403e53e",
+        "GUID:a92d208582c4d6445ad4140259a5eb94",
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:28f4410796244414cb312c9c49648d8c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "ENABLE_GAME_CREATOR",
+        "ENABLE_UGS_MULTIPLAY"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

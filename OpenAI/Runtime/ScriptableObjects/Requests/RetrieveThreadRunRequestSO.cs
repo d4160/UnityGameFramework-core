@@ -20,6 +20,8 @@ namespace d4160.Runtime.OpenAI.ScriptableObjects
         [SerializeField] private string _threadId;
         [SerializeField] private string _runId;
 
+        public string ThreadId { get => _threadId; set => _threadId = value; }
+
 #if ODIN_INSPECTOR
         [Button]
 #endif

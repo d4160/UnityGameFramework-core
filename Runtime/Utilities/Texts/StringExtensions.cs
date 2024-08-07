@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace d4160.Texts
@@ -107,6 +108,13 @@ namespace d4160.Texts
         public static string Alpha(this string s, string a)
         {
             return $"<alpha=#{a}>{s}</alpha>";
+        }
+
+        public static string ConvertMarkdownToHtml(this string markdown)
+        {
+            // Replace double asterisks with <b> tags
+            string html = Regex.Replace(markdown, @"\*\*(.*?)\*\*", "<b>$1</b>");
+            return html;
         }
     }
 }

@@ -20,12 +20,12 @@ namespace d4160.Runtime.OpenAI.ScriptableObjects
             SendRequest(_settingsSO.ApiKey);
         }
 
-        public void SendRequest(Action<string> onResponse, Action<string> onError = null)
+        public void SendRequest(Action<ThreadObject> onResponse, Action<string> onError = null)
         {
-            SendRequest(_settingsSO.ApiKey, null);
+            SendRequest(_settingsSO.ApiKey, onResponse, onError);
         }
 
-        public void SendRequest(string apiKey, Action<string> onResponse = null, Action<string> onError = null)
+        public void SendRequest(string apiKey, Action<ThreadObject> onResponse = null, Action<string> onError = null)
         {
             AssistantsAPI.CreateThread(apiKey, onError, onResponse);
         }
