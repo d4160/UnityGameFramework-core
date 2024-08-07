@@ -27,7 +27,10 @@ namespace d4160.Runtime.UGS.Authentication
         {
             base.OnDestroy(trigger);
 
-            AuthenticationManager2.Instance.OnInvalidUsernameOrPassword -= OnInvalidUsernameOrPassword;
+            if (AuthenticationManager2.Instance)
+            {
+                AuthenticationManager2.Instance.OnInvalidUsernameOrPassword -= OnInvalidUsernameOrPassword;
+            }
         }
 
         protected virtual void OnInvalidUsernameOrPassword()

@@ -1,7 +1,15 @@
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace d4160.Runtime.OpenAI.API
 {
+    public enum MessageRole
+    {
+        none,
+        assistant,
+        user
+    }
+
     [System.Serializable]
     public class MessageObject
     {
@@ -14,11 +22,26 @@ namespace d4160.Runtime.OpenAI.API
         public MessageContent[] content; // Single object
     }
 
-    public enum MessageRole
+    [System.Serializable]
+    public class MessageDeltaObject
     {
-        none,
-        assistant,
-        user
+        public MessageContent[] content; // Single object
+    }
+
+    [System.Serializable]
+    public class MessageStreamObject
+    {
+        public string id;
+        //[JsonProperty("object")]
+        //public string objectProp;
+        public string status = "none";
+        public MessageContent[] content = null;
+        public MessageDeltaObject delta = null;
+
+        public static MessageStreamObject FromJson(string json)
+        {
+            return JsonConvert.DeserializeObject<MessageStreamObject>(json);
+        }
     }
 
     [System.Serializable]
