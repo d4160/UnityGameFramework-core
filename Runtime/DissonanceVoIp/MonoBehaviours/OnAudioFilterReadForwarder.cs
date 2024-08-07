@@ -20,23 +20,32 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
 
     [Header("Variables")]
     [SerializeField, Expandable] private BoolVariableSO _isMutedVar;
+    [SerializeField, Expandable] private BoolVariableSO _isGlobalMutedVar;
+
+    private BoolEventSO.EventListener _onGlobalIsMutedChanged;
 
     private Dissonance.Audio.Capture.BasicMicrophoneCapture _micCapture;
     private float _originalAmplitude;
+    private bool _isMutedPrev = true;
+    private bool _isGlobalMutedPrev = true;
 
     private void Awake()
     {
         _originalAmplitude = _amplitudeMultiplier;
 
         _micCapture = GetComponent<Dissonance.Audio.Capture.BasicMicrophoneCapture>();
+
+        _onGlobalIsMutedChanged = new(SetIsGlobalMuted);
     }
 
     private void Start()
     {
-        if (_isMutedVar != null)
-        {
-            _muteState = _isMutedVar.Value ? MuteState.Before : MuteState.After;
-        }
+        _isMutedPrev = _isMutedVar.Value;
+        if (_isGlobalMutedVar) _isGlobalMutedPrev = _isGlobalMutedVar.Value;
+
+        SetIsMuted(_isMutedVar.Value);
+
+        if (_isGlobalMutedVar) SetIsGlobalMuted(_isGlobalMutedVar.Value);
 
         if (_micCapture)
         {
@@ -61,6 +70,8 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
         {
             _isMutedVar.OnValueChange.AddListener(this);
         }
+
+        if (_isGlobalMutedVar) _isGlobalMutedVar.OnValueChange.AddListener(_onGlobalIsMutedChanged);
     }
 
     private void OnDisable()
@@ -69,6 +80,8 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
         {
             _isMutedVar.OnValueChange.RemoveListener(this);
         }
+
+        if (_isGlobalMutedVar) _isGlobalMutedVar.OnValueChange.RemoveListener(_onGlobalIsMutedChanged);
     }
 
     private void OnAudioFilterRead(float[] data, int channels)
@@ -100,6 +113,29 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
 
     public void OnInvoked(bool isMuted)
     {
+        SetIsMuted(isMuted);
+    }
+
+    private void SetIsMuted(bool isMuted)
+    {
+        _isMutedPrev = isMuted;
+        if (isMuted && !_isGlobalMutedPrev)
+        {
+            isMuted = false;
+        }
+
+        _muteState = isMuted ? MuteState.Before : MuteState.After;
+    }
+
+    private void SetIsGlobalMuted(bool isMuted)
+    {
+        _isGlobalMutedPrev = isMuted;
+
+        if (isMuted && !_isMutedPrev)
+        {
+            isMuted = false;
+        }
+
         _muteState = isMuted ? MuteState.Before : MuteState.After;
     }
 }

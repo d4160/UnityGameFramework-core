@@ -54,6 +54,9 @@ namespace d4160.AgoraRtc
 #endif
         [SerializeField] private ChannelMediaOptionsSO _mediaOptionsCameraTrack;
 
+        [Header("References")]
+        [SerializeField] private Material _defaultVTextureMat;
+
         public VideoSurfaceDicRuntimeSetSO RuntimeDictionary => _runtimeDictionary;
 
         public List<VideoSurface> StaticVideoSurfaces { get; set; }
@@ -103,6 +106,60 @@ namespace d4160.AgoraRtc
         public void EnableStaticVideoSurfaceByIndex(int index, uint userId, bool isScreenCapture = false)
         {
             EnableStaticVideoSurface(_usersRuntimeSet.LocalUid == userId ? 0 : userId, false, index, isScreenCapture);
+        }
+
+        public void SetAllStaticVideoSurfaceMaterialByIndex(int fromIndex)
+        {
+            for (int i = 0; i < StaticVideoSurfaces.Count; i++)
+            {
+                if (i != fromIndex)
+                {
+                    ReplicateStaticVideoSurfaceMaterial(fromIndex, i);
+                }
+            }
+        }
+
+        public void ReplicateStaticVideoSurfaceMaterial(int fromIndex, int toIndex)
+        {
+            //Debug.Log($"[EnableStaticVideoSurface]");
+            if (StaticVideoSurfaces != null && StaticVideoSurfaces.IsValidIndex(fromIndex) && StaticVideoSurfaces.IsValidIndex(toIndex))
+            {
+                VideoSurface fromSurface = StaticVideoSurfaces[fromIndex];
+                VideoSurface toSurface = StaticVideoSurfaces[toIndex];
+
+                if (fromSurface == null || toSurface == null)
+                    return;
+
+                if (toSurface.Renderer)
+                {
+                    toSurface.Renderer.material = fromSurface.Renderer.material;
+                }
+            }
+        }
+
+        public void UnsetAllStaticVideoSurfaceMaterialByIndex(int fromIndex)
+        {
+            for (int i = 0; i < StaticVideoSurfaces.Count; i++)
+            {
+                if (i != fromIndex)
+                {
+                    RemoveStaticVideoSurfaceMaterial(i);
+                }
+            }
+        }
+
+        public void RemoveStaticVideoSurfaceMaterial(int index)
+        {
+            //Debug.Log($"[EnableStaticVideoSurface]");
+            if (StaticVideoSurfaces != null && StaticVideoSurfaces.IsValidIndex(index))
+            {
+                VideoSurface vSurface = StaticVideoSurfaces[index];
+
+                if (vSurface == null)
+                    return;
+
+                vSurface.Renderer.material = _defaultVTextureMat;
+            }
         }
 
         public void SetAllStaticVideoSurfaceByIndex(int index, uint userId, bool isScreenCapture = false)

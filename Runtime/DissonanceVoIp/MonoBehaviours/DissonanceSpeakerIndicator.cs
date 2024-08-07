@@ -10,6 +10,10 @@ namespace d4160.Dissonance
     {
         [SerializeField] private GameObject[] _isSpeakingReceivers;
 
+        [Header("Debug")]
+        [SerializeField] private bool _isSpeaking;
+        [SerializeField] private float _amplitude;
+
         private IDissonancePlayer _player;
         private VoicePlayerState _state;
         private IIsSpeakingReceiver[] _receivers;
@@ -43,6 +47,8 @@ namespace d4160.Dissonance
 
         public override void OnUpdate(float deltaTime)
         {
+            _isSpeaking = IsSpeaking;
+            _amplitude = Amplitude;
             if (_receivers == null) return;
             for (int i = 0; i < _receivers.Length; i++)
             {
@@ -61,7 +67,7 @@ namespace d4160.Dissonance
             //The loop is necessary in case Dissonance is still initializing this player into the network session
             while (_state == null)
             {
-                _state = FindObjectOfType<DissonanceComms>().FindPlayer(_player.PlayerId);
+                _state = FindFirstObjectByType<DissonanceComms>().FindPlayer(_player.PlayerId);
                 yield return null;
             }
         }
