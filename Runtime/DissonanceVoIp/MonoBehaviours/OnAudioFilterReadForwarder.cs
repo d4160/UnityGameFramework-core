@@ -40,12 +40,13 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
 
     private void Start()
     {
-        _isMutedPrev = _isMutedVar.Value;
-        if (_isGlobalMutedVar) _isGlobalMutedPrev = _isGlobalMutedVar.Value;
+        if (_isMutedVar != null) _isMutedPrev = _isMutedVar.Value;
+        if (_isGlobalMutedVar != null) _isGlobalMutedPrev = _isGlobalMutedVar.Value;
 
-        SetIsMuted(_isMutedVar.Value);
+        if (_isMutedVar != null)
+            SetIsMuted(_isMutedVar.Value);
 
-        if (_isGlobalMutedVar) SetIsGlobalMuted(_isGlobalMutedVar.Value);
+        if (_isGlobalMutedVar != null) SetIsGlobalMuted(_isGlobalMutedVar.Value);
 
         if (_micCapture)
         {
@@ -71,7 +72,7 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
             _isMutedVar.OnValueChange.AddListener(this);
         }
 
-        if (_isGlobalMutedVar) _isGlobalMutedVar.OnValueChange.AddListener(_onGlobalIsMutedChanged);
+        if (_isGlobalMutedVar != null) _isGlobalMutedVar.OnValueChange.AddListener(_onGlobalIsMutedChanged);
     }
 
     private void OnDisable()
@@ -81,7 +82,7 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
             _isMutedVar.OnValueChange.RemoveListener(this);
         }
 
-        if (_isGlobalMutedVar) _isGlobalMutedVar.OnValueChange.RemoveListener(_onGlobalIsMutedChanged);
+        if (_isGlobalMutedVar != null) _isGlobalMutedVar.OnValueChange.RemoveListener(_onGlobalIsMutedChanged);
     }
 
     private void OnAudioFilterRead(float[] data, int channels)
