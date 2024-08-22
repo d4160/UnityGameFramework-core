@@ -27,7 +27,7 @@ namespace d4160.UGS.Multiplay
             jsonRequestBody,
             (string error) =>
             {
-                if (_logger) _logger.LogError("Error: " + error);
+                if (_logger) _logger.LogError($"TokenExchange Url: {url}, Error: {error}");
 
                 onError?.Invoke(error);
             },
