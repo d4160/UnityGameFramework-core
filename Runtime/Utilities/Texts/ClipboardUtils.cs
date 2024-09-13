@@ -17,14 +17,14 @@ public static class ClipboardUtils
 
 #if UNITY_ANDROID
         // Asegúrate de tener los permisos adecuados en el archivo AndroidManifest.xml para acceder al portapapeles.
-        if (Permission.HasUserAuthorizedPermission(Permission.ClipboardWrite))
-        {
-            GUIUtility.systemCopyBuffer = text;
-        }
-        else
-        {
-            Permission.RequestUserPermission(Permission.ClipboardWrite);
-        }
+        //if (Permission.HasUserAuthorizedPermission(Permission.ClipboardWrite))
+        //{
+        GUIUtility.systemCopyBuffer = text;
+        //}
+        //else
+        //{
+        //Permission.RequestUserPermission(Permission.ClipboardWrite);
+        //}
 #endif
     }
 }
