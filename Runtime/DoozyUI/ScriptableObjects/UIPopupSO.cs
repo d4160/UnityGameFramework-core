@@ -1,6 +1,7 @@
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace d4160.DoozyUI
 {
@@ -12,14 +13,24 @@ namespace d4160.DoozyUI
 
         private UIPopup _popup;
 
-        public UIPopup Popup 
-        { 
-            get {
-                if (_popup == null) 
+        public UIPopup Popup
+        {
+            get
+            {
+                if (_popup == null)
                 {
                     _popup = UIPopup.Get(_popupLnk.prefabName);
+
+                    var canvasScaler = UIPopup.popupsCanvas.gameObject.GetComponent<CanvasScaler>();
+
+                    if (canvasScaler == null)
+                    {
+                        canvasScaler = UIPopup.popupsCanvas.gameObject.AddComponent<CanvasScaler>();
+                        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                        canvasScaler.matchWidthOrHeight = 0.5f;
+                    }
                 }
-                return _popup; 
+                return _popup;
             }
         }
 

@@ -1,7 +1,9 @@
 #if !DEDICATED_SERVER
 using d4160.Collections;
 using d4160.Core;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using System.Collections;
 using UnityEngine;
 
