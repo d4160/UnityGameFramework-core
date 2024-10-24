@@ -1,4 +1,6 @@
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using System;
 using System.Collections;
 using UnityEngine;
@@ -34,7 +36,9 @@ public class BasicMicrophoneCapture : MonoBehaviour
         StartCoroutine(RestartMicCo(true));
     }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
     [Button]
+#endif
     public void StartMicrophone()
     {
         StartMicrophone(false);
@@ -45,7 +49,9 @@ public class BasicMicrophoneCapture : MonoBehaviour
         StartCoroutine(StartMicrophoneCo(delay));
     }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
     [Button]
+#endif
     public void StopMicrophone()
     {
         //UNITY_WEBGL

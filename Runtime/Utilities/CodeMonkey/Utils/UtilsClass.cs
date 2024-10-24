@@ -302,12 +302,24 @@ namespace CodeMonkey.Utils
         {
             //Debug.Log(EventSystem.current.IsPointerOverGameObject());
 
+            PointerEventData pe = new PointerEventData(EventSystem.current);
+
             // if (EventSystem.current.IsPointerOverGameObject()) {
             //     return true;
             // } else {
+#if UNITY_ANDROID
+            var touch = Touchscreen.current;
+            if (touch == null)
+                return false;
+
+            Vector2 touchPosition = touch.primaryTouch.position.ReadValue();
+            pe.position = touchPosition;
+#else
             Mouse mouse = Mouse.current;
-            PointerEventData pe = new PointerEventData(EventSystem.current);
+            if (mouse == null) return false;
             pe.position = mouse.position.value;
+#endif
+
             List<RaycastResult> hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pe, hits);
             return hits.Count > 0 && !hits[0].gameObject.GetComponent<Collider>();

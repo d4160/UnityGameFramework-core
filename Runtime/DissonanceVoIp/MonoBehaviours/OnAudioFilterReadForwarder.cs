@@ -3,7 +3,9 @@ using d4160.Events;
 using d4160.Variables;
 using UnityEngine.Serialization;
 using UnityEngine;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 
 public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
 {
@@ -19,8 +21,16 @@ public class OnAudioFilterReadForwarder : MonoBehaviour, IEventListener<bool>
     [SerializeField] private AudioFilterReadEventSO _audioFilterReadEvent;
 
     [Header("Variables")]
-    [SerializeField, Expandable] private BoolVariableSO _isMutedVar;
-    [SerializeField, Expandable] private BoolVariableSO _isGlobalMutedVar;
+    [SerializeField]
+#if ENABLE_NAUGHTY_ATTRIBUTES
+    [Expandable]
+#endif
+    private BoolVariableSO _isMutedVar;
+    [SerializeField]
+#if ENABLE_NAUGHTY_ATTRIBUTES
+    [Expandable]
+#endif
+    private BoolVariableSO _isGlobalMutedVar;
 
     private BoolEventSO.EventListener _onGlobalIsMutedChanged;
 

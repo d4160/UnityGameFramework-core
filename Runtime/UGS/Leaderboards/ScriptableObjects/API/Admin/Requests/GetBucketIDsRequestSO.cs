@@ -1,5 +1,7 @@
 using System;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -31,7 +33,9 @@ namespace d4160.UGS.Leaderboards.AdminAPI
             return new GetLeaderboardsAdminGenericRequest(_leaderboardId, _offset, _limit);
         }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         public void SendRequest()
         {
             SendRequest(null);
@@ -46,7 +50,9 @@ namespace d4160.UGS.Leaderboards.AdminAPI
             }, onError);
         }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         public void LogResponse()
         {
             var json = JsonConvert.SerializeObject(_getBucketIdsResponse);
