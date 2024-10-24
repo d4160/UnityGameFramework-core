@@ -92,20 +92,29 @@ namespace d4160.UGS.CloudSave
 
             //Dictionary<string, string> data = await CloudSaveService.Instance.Data.LoadAsync(keys);
 
-            Dictionary<string, Item> data = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
-
-            foreach (var item in data)
+            try
             {
-                for (int i = 0; i < _variablesToLoad.Count; i++)
+
+                Dictionary<string, Item> data = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+
+                foreach (var item in data)
                 {
-                    if (_variablesToLoad[i] is IDictionaryItem<string> dicItem)
+                    for (int i = 0; i < _variablesToLoad.Count; i++)
                     {
-                        if (item.Key == dicItem.Key)
+                        if (_variablesToLoad[i] is IDictionaryItem<string> dicItem)
                         {
-                            dicItem.ParseInnerValue(item.Value.Value.GetAs<string>());
+                            if (item.Key == dicItem.Key)
+                            {
+                                dicItem.ParseInnerValue(item.Value.Value.GetAs<string>());
+                            }
                         }
                     }
                 }
+
+            }
+            catch (System.Exception e)
+            {
+
             }
         }
     }

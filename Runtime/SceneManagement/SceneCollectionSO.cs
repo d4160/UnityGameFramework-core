@@ -18,28 +18,31 @@ using UnityEngine.SceneManagement;
 using d4160.Core;
 using System;
 
-namespace d4160.SceneManagement {
-    [CreateAssetMenu (menuName = "d4160/SceneManagement/Scene Collection")]
-    public class SceneCollectionSO : ScriptableObject {
+namespace d4160.SceneManagement
+{
+    [CreateAssetMenu(menuName = "d4160/SceneManagement/Scene Collection")]
+    public class SceneCollectionSO : ScriptableObject
+    {
         [SerializeField] private string _label;
-        [SerializeField] [TextArea] private string _description;
+        [SerializeField][TextArea] private string _description;
         [SerializeField] private AssetManagementType _sceneAssetType;
 
-        [SerializeField] [Space] private SceneReference _loadingScene;
+        [SerializeField][Space] private SceneReference _loadingScene;
         [SerializeField] private SceneLinkSO _loadingSceneInfo;
 
-        [Space][ContextMenuItem ("Open Pack Scenes Single", "OpenPackScenesSingle")]
-        [ContextMenuItem ("Open Pack Scenes Additive", "OpenPackScenesAdditive")]
+        [Space]
+        [ContextMenuItem("Open Pack Scenes Single", "OpenPackScenesSingle")]
+        [ContextMenuItem("Open Pack Scenes Additive", "OpenPackScenesAdditive")]
         [SerializeField] private SceneReference[] _sceneCollection;
 #if ENABLE_NAUGHTY_ATTRIBUTES
-        [DropdownIndex ("SceneNames")]
+        [DropdownIndex("SceneNames")]
 #endif
         [SerializeField] private int _activableScene;
 #if ENABLE_NAUGHTY_ATTRIBUTES
 
-        [InspectInline (canEditRemoteTarget = true)]
+        [InspectInline(canEditRemoteTarget = true)]
 #endif
-        [SerializeField] [Space] private ScriptableObject _additionalData;
+        [SerializeField][Space] private ScriptableObject _additionalData;
 
         public event Action<int, string> OnCollectionLoaded;
 
@@ -50,60 +53,67 @@ namespace d4160.SceneManagement {
 
         public string Label => _label;
         public string Description => _description;
-        public SceneManagerSO SceneManager { get => _sceneManager;  set => _sceneManager = value; }
+        public SceneManagerSO SceneManager { get => _sceneManager; set => _sceneManager = value; }
         public int ManagerIndex { get => _managerIndex; set => _managerIndex = value; }
 
-        private readonly List<AsyncOperation> _sceneOperations = new List<AsyncOperation> ();
+        private readonly List<AsyncOperation> _sceneOperations = new List<AsyncOperation>();
 #if ADDRESSABLES
-        private readonly List<AsyncOperationHandle<SceneInstance>> _addressablesOperation = new List<AsyncOperationHandle<SceneInstance>> ();
+        private readonly List<AsyncOperationHandle<SceneInstance>> _addressablesOperation = new List<AsyncOperationHandle<SceneInstance>>();
 #endif
         public List<AsyncOperation> SceneOperationHandles => _sceneOperations;
 #if ADDRESSABLES
         public List<AsyncOperationHandle<SceneInstance>> AddressablesOperationHandles => _addressablesOperation;
 #endif
 
-#region UNITY_EDITOR
+        #region UNITY_EDITOR
 #if UNITY_EDITOR
-        private string[] SceneNames => _sceneCollection?.Select (x => x.SceneAsset != null ? x.SceneAsset.name : "- NULL -").ToArray ();
+        private string[] SceneNames => _sceneCollection?.Select(x => x.SceneAsset != null ? x.SceneAsset.name : "- NULL -").ToArray();
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        private void OpenPackScenesSingle () {
-            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo ()) {
-                for (int i = 0; i < _sceneCollection.Length; i++) {
-                    EditorSceneManager.OpenScene (_sceneCollection[i].scenePath,
+        private void OpenPackScenesSingle()
+        {
+            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            {
+                for (int i = 0; i < _sceneCollection.Length; i++)
+                {
+                    EditorSceneManager.OpenScene(_sceneCollection[i].scenePath,
                         i == 0 ? OpenSceneMode.Single : OpenSceneMode.Additive);
                 }
 
-                UnityEngine.SceneManagement.SceneManager.SetActiveScene (UnityEngine.SceneManagement.SceneManager.GetSceneByPath (_sceneCollection[_activableScene].scenePath));
+                UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByPath(_sceneCollection[_activableScene].scenePath));
             }
         }
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        private void OpenPackScenesAdditive () {
-            for (int i = 0; i < _sceneCollection.Length; i++) {
-                EditorSceneManager.OpenScene (_sceneCollection[i].scenePath, OpenSceneMode.Additive);
+        private void OpenPackScenesAdditive()
+        {
+            for (int i = 0; i < _sceneCollection.Length; i++)
+            {
+                EditorSceneManager.OpenScene(_sceneCollection[i].scenePath, OpenSceneMode.Additive);
             }
 
-            UnityEngine.SceneManagement.SceneManager.SetActiveScene (UnityEngine.SceneManagement.SceneManager.GetSceneByPath (_sceneCollection[_activableScene].scenePath));
+            UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByPath(_sceneCollection[_activableScene].scenePath));
         }
 #endif
-#endregion
+        #endregion
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void LoadScenesAsync () {
-            switch (_sceneAssetType) {
+        public void LoadScenesAsync()
+        {
+            switch (_sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    LoadScenesAsyncDefault ();
+                    LoadScenesAsyncDefault();
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    LoadScenesAsyncAddressables ();
+                    LoadScenesAsyncAddressables();
                     break;
 #endif
                 default:
@@ -114,14 +124,16 @@ namespace d4160.SceneManagement {
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void ContinueLoadAsync () {
-            switch (_sceneAssetType) {
+        public void ContinueLoadAsync()
+        {
+            switch (_sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    ContinueLoadAsyncDefault ();
+                    ContinueLoadAsyncDefault();
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    ContinueLoadAsyncAddressables ();
+                    ContinueLoadAsyncAddressables();
                     break;
 #endif
                 default:
@@ -132,14 +144,16 @@ namespace d4160.SceneManagement {
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void UnloadScenesAsync () {
-            switch (_sceneAssetType) {
+        public void UnloadScenesAsync()
+        {
+            switch (_sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    UnloadScenesAsyncDefault ();
+                    UnloadScenesAsyncDefault();
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    UnloadScenesAsyncAddressables ();
+                    UnloadScenesAsyncAddressables();
                     break;
 #endif
                 default:
@@ -149,49 +163,60 @@ namespace d4160.SceneManagement {
 
         public bool CompareLabel(string label) => _label == label;
 
-        public void LoadScenesAsyncDefault (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true) {
-            if (!_loadingScene.IsNull) {
-                LoadScenesAsyncRoutine (loadSceneMode, activateOnLoad).StartCoroutine ();
-            } else {
-                LoadScenesAsyncInternal (loadSceneMode, activateOnLoad);
+        public void LoadScenesAsyncDefault(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, bool reload = false)
+        {
+            if (!_loadingScene.IsNull)
+            {
+                LoadScenesAsyncRoutine(loadSceneMode, activateOnLoad).StartCoroutine();
+            }
+            else
+            {
+                LoadScenesAsyncInternal(loadSceneMode, activateOnLoad, reload);
             }
         }
 
-        private IEnumerator LoadScenesAsyncRoutine (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true) {
-            _loadingScene.Clear ();
-            
-            if (_loadingSceneInfo) {
-                
+        private IEnumerator LoadScenesAsyncRoutine(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true)
+        {
+            _loadingScene.Clear();
+
+            if (_loadingSceneInfo)
+            {
+
                 _loadingSceneInfo.SceneCollection = this;
                 _loadingSceneInfo.SceneAssetType = AssetManagementType.Default;
-                _loadingSceneInfo.SetLoadInfo (loadSceneMode, activateOnLoad);
+                _loadingSceneInfo.SetLoadInfo(loadSceneMode, activateOnLoad);
             }
 
-            AsyncOperation loadingSceneOperation = _loadingScene.LoadSceneAsync (LoadSceneMode.Single);
+            AsyncOperation loadingSceneOperation = _loadingScene.LoadSceneAsync(LoadSceneMode.Single);
 
             yield return loadingSceneOperation;
 
-            while (!loadingSceneOperation.isDone) {
+            while (!loadingSceneOperation.isDone)
+            {
                 yield return null;
             }
 
             // Call ContinueLoadAsync from SceneLinkSO
         }
 
-        public void ContinueLoadAsyncDefault (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true) {
-            LoadScenesAsyncInternal (loadSceneMode, activateOnLoad);
+        public void ContinueLoadAsyncDefault(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, bool reload = false)
+        {
+            LoadScenesAsyncInternal(loadSceneMode, activateOnLoad, reload);
         }
 
-        private void LoadScenesAsyncInternal (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true) {
-            if (_sceneOperations.Count > 0) {
-                ClearOperations ();
+        private void LoadScenesAsyncInternal(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, bool reload = false)
+        {
+            if (_sceneOperations.Count > 0)
+            {
+                ClearOperations();
             }
 
             _loadedCountTarget = _sceneCollection.Length;
             _loadedCount = 0;
-            _sceneOperations.Clear ();
-            for (int i = 0; i < _loadedCountTarget; i++) {
-                if (CheckIfAlreadyLoaded(_sceneCollection[i]))
+            _sceneOperations.Clear();
+            for (int i = 0; i < _loadedCountTarget; i++)
+            {
+                if (!reload && CheckIfAlreadyLoaded(_sceneCollection[i]))
                 {
                     OnSceneLoadedDefault(default);
                 }
@@ -214,23 +239,29 @@ namespace d4160.SceneManagement {
             }
         }
 
-        private void OnSceneLoadedDefault(AsyncOperation asyncOp) {
+        private void OnSceneLoadedDefault(AsyncOperation asyncOp)
+        {
             _loadedCount++;
 
-            if(_loadedCount >= _loadedCountTarget) {
+            if (_loadedCount >= _loadedCountTarget)
+            {
                 OnCollectionLoaded?.Invoke(_managerIndex, _label);
             }
         }
 
-        public void UnloadScenesAsyncDefault () {
-            for (int i = 0; i < _sceneCollection.Length; i++) {
-                _sceneCollection[i].UnloadSceneAsync ();
+        public void UnloadScenesAsyncDefault()
+        {
+            for (int i = 0; i < _sceneCollection.Length; i++)
+            {
+                _sceneCollection[i].UnloadSceneAsync();
             }
         }
 
-        private void ClearOperations () {
-            for (var i = 0; i < _sceneCollection.Length; i++) {
-                _sceneCollection[i].Clear ();
+        private void ClearOperations()
+        {
+            for (var i = 0; i < _sceneCollection.Length; i++)
+            {
+                _sceneCollection[i].Clear();
             }
         }
 
@@ -250,69 +281,87 @@ namespace d4160.SceneManagement {
         }
 
 #if ADDRESSABLES
-        private void LoadScenesAsyncAddressables () {
-            LoadScenesAsyncAddressables (LoadSceneMode.Single);
+        private void LoadScenesAsyncAddressables()
+        {
+            LoadScenesAsyncAddressables(LoadSceneMode.Single);
         }
 
-        public void LoadScenesAsyncAddressables (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100) {
-            if (!_loadingScene.IsNull) {
-                LoadScenesAsyncAddressablesRoutine (loadSceneMode, activateOnLoad).StartCoroutine ();
-            } else {
-                LoadScenesAsyncAddressablesInternal (loadSceneMode, activateOnLoad, priority);
+        public void LoadScenesAsyncAddressables(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100)
+        {
+            if (!_loadingScene.IsNull)
+            {
+                LoadScenesAsyncAddressablesRoutine(loadSceneMode, activateOnLoad).StartCoroutine();
+            }
+            else
+            {
+                LoadScenesAsyncAddressablesInternal(loadSceneMode, activateOnLoad, priority);
             }
         }
 
-        private IEnumerator LoadScenesAsyncAddressablesRoutine (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100) {
-            if (_loadingSceneInfo) {
+        private IEnumerator LoadScenesAsyncAddressablesRoutine(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100)
+        {
+            if (_loadingSceneInfo)
+            {
                 _loadingSceneInfo.SceneCollection = this;
                 _loadingSceneInfo.SceneAssetType = AssetManagementType.Addressables;
-                _loadingSceneInfo.SetLoadInfo (loadSceneMode, activateOnLoad);
+                _loadingSceneInfo.SetLoadInfo(loadSceneMode, activateOnLoad);
             }
 
-            AsyncOperationHandle<SceneInstance> loadingSceneOperation = _loadingScene.LoadSceneAsyncAddressables (LoadSceneMode.Single);
+            AsyncOperationHandle<SceneInstance> loadingSceneOperation = _loadingScene.LoadSceneAsyncAddressables(LoadSceneMode.Single);
 
             yield return loadingSceneOperation;
 
-            while (!loadingSceneOperation.IsDone) {
+            while (!loadingSceneOperation.IsDone)
+            {
                 yield return null;
             }
 
             // Call ContinueLoadAsyncAddressables from SceneLinkSO
         }
 
-        public void ContinueLoadAsyncAddressables (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100) {
-            LoadScenesAsyncAddressablesInternal (loadSceneMode, activateOnLoad, priority);
+        public void ContinueLoadAsyncAddressables(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100)
+        {
+            LoadScenesAsyncAddressablesInternal(loadSceneMode, activateOnLoad, priority);
         }
 
-        private void LoadScenesAsyncAddressablesInternal (LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100) {
+        private void LoadScenesAsyncAddressablesInternal(LoadSceneMode loadSceneMode = LoadSceneMode.Single, bool activateOnLoad = true, int priority = 100)
+        {
             _loadedCountTarget = _sceneCollection.Length;
             _loadedCount = 0;
-            _addressablesOperation.Clear ();
-            for (int i = 0; i < _loadedCountTarget; i++) {
-                if (!activateOnLoad) {
+            _addressablesOperation.Clear();
+            for (int i = 0; i < _loadedCountTarget; i++)
+            {
+                if (!activateOnLoad)
+                {
                     AsyncOperationHandle<SceneInstance> opNoLoad = _sceneCollection[i]
                         .LoadSceneAsyncAddressables(i == 0 ? loadSceneMode : LoadSceneMode.Additive, false, priority);
-                    _addressablesOperation.Add (opNoLoad);
-                    if(opNoLoad.IsValid()) opNoLoad.CompletedTypeless += OnSceneLoadedAddressables;
-                } else {
+                    _addressablesOperation.Add(opNoLoad);
+                    if (opNoLoad.IsValid()) opNoLoad.CompletedTypeless += OnSceneLoadedAddressables;
+                }
+                else
+                {
                     AsyncOperationHandle<SceneInstance> opLoad = _sceneCollection[i].LoadSceneAsyncAddressables(i == 0 ? loadSceneMode : LoadSceneMode.Additive, true, priority);
-                    _addressablesOperation.Add (opLoad);
-                    if(opLoad.IsValid()) opLoad.CompletedTypeless += OnSceneLoadedAddressables;
+                    _addressablesOperation.Add(opLoad);
+                    if (opLoad.IsValid()) opLoad.CompletedTypeless += OnSceneLoadedAddressables;
                 }
             }
         }
 
-        private void OnSceneLoadedAddressables(AsyncOperationHandle asyncOp) {
+        private void OnSceneLoadedAddressables(AsyncOperationHandle asyncOp)
+        {
             _loadedCount++;
 
-            if(_loadedCount >= _loadedCountTarget) {
+            if (_loadedCount >= _loadedCountTarget)
+            {
                 OnCollectionLoaded?.Invoke(_managerIndex, _label);
             }
         }
 
-        public void UnloadScenesAsyncAddressables () {
-            for (int i = 0; i < _sceneCollection.Length; i++) {
-                _sceneCollection[i].UnloadSceneAsyncAddressables ();
+        public void UnloadScenesAsyncAddressables()
+        {
+            for (int i = 0; i < _sceneCollection.Length; i++)
+            {
+                _sceneCollection[i].UnloadSceneAsyncAddressables();
             }
         }
 #endif

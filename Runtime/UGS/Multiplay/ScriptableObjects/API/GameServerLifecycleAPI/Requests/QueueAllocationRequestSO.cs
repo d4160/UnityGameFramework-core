@@ -53,7 +53,7 @@ namespace d4160.UGS.Multiplay.LifecycleAPI
 #endif
         public void SendRequest()
         {
-            SendRequest();
+            SendRequest(null);
         }
 
         public void SendRequest(Action<string> onResult, Action<string> onError = null)

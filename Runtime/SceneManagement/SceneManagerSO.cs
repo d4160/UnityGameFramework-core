@@ -13,11 +13,13 @@ using Photon.Pun;
 
 using UnityEngine;
 
-namespace d4160.SceneManagement {
-    [CreateAssetMenu (menuName = "d4160/SceneManagement/Scene Manager")]
-    public partial class SceneManagerSO : ScriptableObject {
+namespace d4160.SceneManagement
+{
+    [CreateAssetMenu(menuName = "d4160/SceneManagement/Scene Manager")]
+    public partial class SceneManagerSO : ScriptableObject
+    {
 #if ENABLE_NAUGHTY_ATTRIBUTES
-        [InspectInline (canEditRemoteTarget = true)]
+        [InspectInline(canEditRemoteTarget = true)]
 #endif
         [SerializeField] private SceneCollectionSO[] _sceneCollections;
         [SerializeField] private AssetManagementType _sceneAssetType;
@@ -37,22 +39,27 @@ namespace d4160.SceneManagement {
 
         public event Action<int, string> OnCollectionLoaded;
 
-        #if UNITY_EDITOR
-        public string[] GetSceneCollectionNames { 
-            get {
-                
-                if(_sceneCollections == null) return new string[0];
+#if UNITY_EDITOR
+        public string[] GetSceneCollectionNames
+        {
+            get
+            {
+
+                if (_sceneCollections == null) return new string[0];
                 string[] names = new string[_sceneCollections.Length];
-                for (int i = 0; i < names.Length; i++) {
+                for (int i = 0; i < names.Length; i++)
+                {
                     names[i] = _sceneCollections[i]?.Label;
                 }
                 return names;
-            } 
+            }
         }
-        #endif
+#endif
 
-        public SceneCollectionSO GetSceneCollectionAt(int index, out string label) {
-            if (_sceneCollections.IsValidIndex(index)) {
+        public SceneCollectionSO GetSceneCollectionAt(int index, out string label)
+        {
+            if (_sceneCollections.IsValidIndex(index))
+            {
                 label = _sceneCollections[index].Label;
                 return _sceneCollections[index];
             }
@@ -61,10 +68,13 @@ namespace d4160.SceneManagement {
             return null;
         }
 
-        public SceneCollectionSO GetSceneCollection(string label, out int index) {
-            for (int i = 0; i < _sceneCollections.Length; i++) {
+        public SceneCollectionSO GetSceneCollection(string label, out int index)
+        {
+            for (int i = 0; i < _sceneCollections.Length; i++)
+            {
                 SceneCollectionSO sceneCollec = _sceneCollections[i];
-                if (sceneCollec.CompareLabel(label)) {
+                if (sceneCollec.CompareLabel(label))
+                {
                     index = i;
                     return sceneCollec;
                 }
@@ -74,7 +84,8 @@ namespace d4160.SceneManagement {
             return null;
         }
 
-        public void RegisterEvents(){
+        public void RegisterEvents()
+        {
             RegisterToCollectionsEvents();
 #if PHOTON_UNITY_NETWORKING
             PhotonNetwork.AutomaticallySyncScene = false;
@@ -83,7 +94,8 @@ namespace d4160.SceneManagement {
 #endif
         }
 
-        public void UnregisterEvents(){
+        public void UnregisterEvents()
+        {
             UnregisterToCollectionsEvents();
 #if PHOTON_UNITY_NETWORKING
             PhotonNetwork.NetworkingClient.OpResponseReceived -= OnOperation;
@@ -91,7 +103,8 @@ namespace d4160.SceneManagement {
 #endif
         }
 
-        private void RegisterToCollectionsEvents(){
+        private void RegisterToCollectionsEvents()
+        {
             for (int i = 0; i < _sceneCollections.Length; i++)
             {
                 _sceneCollections[i].OnCollectionLoaded += OnCollectionLoadedCallback;
@@ -101,7 +114,8 @@ namespace d4160.SceneManagement {
             }
         }
 
-        private void UnregisterToCollectionsEvents(){
+        private void UnregisterToCollectionsEvents()
+        {
             for (int i = 0; i < _sceneCollections.Length; i++)
             {
                 _sceneCollections[i].OnCollectionLoaded -= OnCollectionLoadedCallback;
@@ -114,28 +128,33 @@ namespace d4160.SceneManagement {
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void LoadSceneCollectionAsync() {
-            LoadSceneCollectionAsync (_selectedSceneCollection, _sceneAssetType);
+        public void LoadSceneCollectionAsync()
+        {
+            LoadSceneCollectionAsync(_selectedSceneCollection, _sceneAssetType, true);
         }
-        
+
         /* LOAD */
 
-        public void LoadSceneCollectionAsync(string label) {
-            LoadSceneCollectionAsync (label, _sceneAssetType);
+        public void LoadSceneCollectionAsync(string label)
+        {
+            LoadSceneCollectionAsync(label, _sceneAssetType);
         }
 
-        public void LoadSceneCollectionAsync(int index) {
-            LoadSceneCollectionAsync (index, _sceneAssetType);
+        public void LoadSceneCollectionAsync(int index, bool reload = false)
+        {
+            LoadSceneCollectionAsync(index, _sceneAssetType, reload);
         }
 
-        public void LoadSceneCollectionAsync(string label, AssetManagementType sceneAssetType) {
-            switch (sceneAssetType) {
+        public void LoadSceneCollectionAsync(string label, AssetManagementType sceneAssetType)
+        {
+            switch (sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    LoadSceneCollectionAsyncDefault (label);
+                    LoadSceneCollectionAsyncDefault(label);
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    LoadSceneCollectionsAsyncAddressables (label);
+                    LoadSceneCollectionsAsyncAddressables(label);
                     break;
 #endif
                 default:
@@ -143,14 +162,16 @@ namespace d4160.SceneManagement {
             }
         }
 
-        public void LoadSceneCollectionAsync(int index, AssetManagementType sceneAssetType) {
-            switch (sceneAssetType) {
+        public void LoadSceneCollectionAsync(int index, AssetManagementType sceneAssetType, bool reload = false)
+        {
+            switch (sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    LoadSceneCollectionAsyncDefault (index);
+                    LoadSceneCollectionAsyncDefault(index, reload);
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    LoadSceneCollectionAsyncAddressables (index);
+                    LoadSceneCollectionAsyncAddressables(index);
                     break;
 #endif
                 default:
@@ -158,10 +179,12 @@ namespace d4160.SceneManagement {
             }
         }
 
-        public void LoadSceneCollectionAsyncDefault(string label) {
+        public void LoadSceneCollectionAsyncDefault(string label, bool reload = false)
+        {
             SceneCollectionSO scnCollecSO = GetSceneCollection(label, out int index);
 
-            if (index == -1) {
+            if (index == -1)
+            {
                 Debug.LogWarning($"Cannot load the level with index: {index}.");
                 return;
             }
@@ -170,18 +193,21 @@ namespace d4160.SceneManagement {
                 _lastLoadedIndex = index;
                 _lastLoadedLabel = label;
             }
-            LoadSceneCollectionAsyncDefault(scnCollecSO);
+            LoadSceneCollectionAsyncDefault(scnCollecSO, reload);
         }
 
 #if ADDRESSABLES
-        public void LoadSceneCollectionsAsyncAddressables(string label) {
+        public void LoadSceneCollectionsAsyncAddressables(string label)
+        {
             SceneCollectionSO scnCollecSO = GetSceneCollection(label, out int index);
-            
-            if (index == -1) {
+
+            if (index == -1)
+            {
                 Debug.LogWarning($"Cannot load the level with index: {index}.");
                 return;
             }
-            else {
+            else
+            {
                 _lastLoadedIndex = index;
                 _lastLoadedLabel = label;
             }
@@ -189,22 +215,25 @@ namespace d4160.SceneManagement {
         }
 #endif
 
-        public void LoadSceneCollectionAsyncDefault(int index) {
+        public void LoadSceneCollectionAsyncDefault(int index, bool reload = false)
+        {
             SceneCollectionSO scnCollecSO = GetSceneCollectionAt(index, out string label);
             _lastLoadedIndex = index;
             _lastLoadedLabel = label;
-            LoadSceneCollectionAsyncDefault(scnCollecSO);
+            LoadSceneCollectionAsyncDefault(scnCollecSO, reload);
         }
 
 #if ADDRESSABLES
-        public void LoadSceneCollectionAsyncAddressables(int index) {
+        public void LoadSceneCollectionAsyncAddressables(int index)
+        {
             SceneCollectionSO scnCollecSO = GetSceneCollectionAt(index, out string label);
             _lastLoadedIndex = index;
             _lastLoadedLabel = label;
             LoadSceneCollectionAsyncAddressables(scnCollecSO);
         }
 
-        public void LoadSceneCollectionAsyncAddressables(SceneCollectionSO sceneCollection) {
+        public void LoadSceneCollectionAsyncAddressables(SceneCollectionSO sceneCollection)
+        {
             sceneCollection.SceneManager = this;
             sceneCollection.ManagerIndex = _lastLoadedIndex;
 
@@ -214,17 +243,19 @@ namespace d4160.SceneManagement {
         }
 #endif
 
-        public void LoadSceneCollectionAsyncDefault(SceneCollectionSO sceneCollection) {
+        public void LoadSceneCollectionAsyncDefault(SceneCollectionSO sceneCollection, bool reload = false)
+        {
             sceneCollection.SceneManager = this;
             sceneCollection.ManagerIndex = _lastLoadedIndex;
 
             OnLevelLoadForPhoton();
 
-            if (sceneCollection) sceneCollection.LoadScenesAsyncDefault();
+            if (sceneCollection) sceneCollection.LoadScenesAsyncDefault(UnityEngine.SceneManagement.LoadSceneMode.Single, true, reload);
         }
 
-        private void OnLevelLoadForPhoton(){
-            
+        private void OnLevelLoadForPhoton()
+        {
+
 #if PHOTON_UNITY_NETWORKING
             if (PhotonHandler.AppQuits)
             {
@@ -241,7 +272,8 @@ namespace d4160.SceneManagement {
 #endif
         }
 
-        private void OnCollectionLoadedCallback(int index, string label){
+        private void OnCollectionLoadedCallback(int index, string label)
+        {
             OnCollectionLoaded?.Invoke(index, label);
         }
 
@@ -249,26 +281,31 @@ namespace d4160.SceneManagement {
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void ContinueCollectionLoadAsync() {
-            ContinueCollectionLoadAsync (_selectedSceneCollection, _sceneAssetType);
+        public void ContinueCollectionLoadAsync()
+        {
+            ContinueCollectionLoadAsync(_selectedSceneCollection, _sceneAssetType);
         }
 
-        public void ContinueCollectionLoadAsync(string label) {
-            ContinueCollectionLoadAsync (label, _sceneAssetType);
+        public void ContinueCollectionLoadAsync(string label)
+        {
+            ContinueCollectionLoadAsync(label, _sceneAssetType);
         }
 
-        public void ContinueCollectionLoadAsync(int index) {
-            ContinueCollectionLoadAsync (index, _sceneAssetType);
+        public void ContinueCollectionLoadAsync(int index)
+        {
+            ContinueCollectionLoadAsync(index, _sceneAssetType);
         }
 
-        public void ContinueCollectionLoadAsync(string label, AssetManagementType sceneAssetType) {
-            switch (sceneAssetType) {
+        public void ContinueCollectionLoadAsync(string label, AssetManagementType sceneAssetType)
+        {
+            switch (sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    ContinueCollectionLoadAsyncDefault (label);
+                    ContinueCollectionLoadAsyncDefault(label);
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    ContinueCollectionLoadAsyncAddressables (label);
+                    ContinueCollectionLoadAsyncAddressables(label);
                     break;
 #endif
                 default:
@@ -276,14 +313,16 @@ namespace d4160.SceneManagement {
             }
         }
 
-        public void ContinueCollectionLoadAsync(int index, AssetManagementType sceneAssetType) {
-            switch (sceneAssetType) {
+        public void ContinueCollectionLoadAsync(int index, AssetManagementType sceneAssetType)
+        {
+            switch (sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    ContinueCollectionLoadAsyncDefault (index);
+                    ContinueCollectionLoadAsyncDefault(index);
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    ContinueCollectionLoadAsyncAddressables (index);
+                    ContinueCollectionLoadAsyncAddressables(index);
                     break;
 #endif
                 default:
@@ -291,36 +330,42 @@ namespace d4160.SceneManagement {
             }
         }
 
-        public void ContinueCollectionLoadAsyncDefault(SceneCollectionSO sceneCollection) {
+        public void ContinueCollectionLoadAsyncDefault(SceneCollectionSO sceneCollection)
+        {
             sceneCollection?.ContinueLoadAsyncDefault();
         }
 
 #if ADDRESSABLES
-        public void ContinueCollectionLoadAsyncAddressables(SceneCollectionSO sceneCollection) {
+        public void ContinueCollectionLoadAsyncAddressables(SceneCollectionSO sceneCollection)
+        {
             sceneCollection?.ContinueLoadAsyncAddressables();
         }
 #endif
 
-        public void ContinueCollectionLoadAsyncDefault(int index) {
+        public void ContinueCollectionLoadAsyncDefault(int index)
+        {
             ContinueCollectionLoadAsyncDefault(GetSceneCollectionAt(index, out string label));
             _lastLoadedLabel = label;
             _lastLoadedIndex = index;
         }
 
-        public void ContinueCollectionLoadAsyncDefault(string label) {
+        public void ContinueCollectionLoadAsyncDefault(string label)
+        {
             ContinueCollectionLoadAsyncDefault(GetSceneCollection(label, out int index));
             _lastLoadedLabel = label;
             _lastLoadedIndex = index;
         }
 
 #if ADDRESSABLES
-        public void ContinueCollectionLoadAsyncAddressables(string label) {
+        public void ContinueCollectionLoadAsyncAddressables(string label)
+        {
             ContinueCollectionLoadAsyncAddressables(GetSceneCollection(label, out int index));
             _lastLoadedLabel = label;
             _lastLoadedIndex = index;
         }
 
-        public void ContinueCollectionLoadAsyncAddressables(int index) {
+        public void ContinueCollectionLoadAsyncAddressables(int index)
+        {
             ContinueCollectionLoadAsyncAddressables(GetSceneCollectionAt(index, out string label));
             _lastLoadedLabel = label;
             _lastLoadedIndex = index;
@@ -331,26 +376,31 @@ namespace d4160.SceneManagement {
 #if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
 #endif
-        public void UnloadSceneCollectionAsync() {
-            UnloadSceneCollectionAsync (_selectedSceneCollection, _sceneAssetType);
+        public void UnloadSceneCollectionAsync()
+        {
+            UnloadSceneCollectionAsync(_selectedSceneCollection, _sceneAssetType);
         }
 
-        public void UnloadSceneCollectionAsync(string label) {
-            UnloadSceneCollectionAsync (label, _sceneAssetType);
+        public void UnloadSceneCollectionAsync(string label)
+        {
+            UnloadSceneCollectionAsync(label, _sceneAssetType);
         }
 
-        public void UnloadSceneCollectionAsync(int index) {
-            UnloadSceneCollectionAsync (index, _sceneAssetType);
+        public void UnloadSceneCollectionAsync(int index)
+        {
+            UnloadSceneCollectionAsync(index, _sceneAssetType);
         }
 
-        public void UnloadSceneCollectionAsync(int index, AssetManagementType sceneAssetType) {
-            switch (sceneAssetType) {
+        public void UnloadSceneCollectionAsync(int index, AssetManagementType sceneAssetType)
+        {
+            switch (sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    UnloadSceneCollectionAsyncDefault (index);
+                    UnloadSceneCollectionAsyncDefault(index);
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    UnloadSceneCollectionAsyncAddressables (index);
+                    UnloadSceneCollectionAsyncAddressables(index);
                     break;
 #endif
                 default:
@@ -358,14 +408,16 @@ namespace d4160.SceneManagement {
             }
         }
 
-        public void UnloadSceneCollectionAsync(string label, AssetManagementType sceneAssetType) {
-            switch (sceneAssetType) {
+        public void UnloadSceneCollectionAsync(string label, AssetManagementType sceneAssetType)
+        {
+            switch (sceneAssetType)
+            {
                 case AssetManagementType.Default:
-                    UnloadSceneCollectionAsyncDefault (label);
+                    UnloadSceneCollectionAsyncDefault(label);
                     break;
 #if ADDRESSABLES
                 case AssetManagementType.Addressables:
-                    UnloadSceneCollectionAsyncAddressables (label);
+                    UnloadSceneCollectionAsyncAddressables(label);
                     break;
 #endif
                 default:
@@ -373,30 +425,36 @@ namespace d4160.SceneManagement {
             }
         }
 
-        public void UnloadSceneCollectionAsyncDefault(SceneCollectionSO sceneCollection) {
+        public void UnloadSceneCollectionAsyncDefault(SceneCollectionSO sceneCollection)
+        {
             sceneCollection?.UnloadScenesAsyncDefault();
         }
 
 #if ADDRESSABLES
-        public void UnloadSceneCollectionAsyncAddressables(SceneCollectionSO sceneCollection) {
+        public void UnloadSceneCollectionAsyncAddressables(SceneCollectionSO sceneCollection)
+        {
             sceneCollection?.UnloadScenesAsyncAddressables();
         }
 #endif
 
-        public void UnloadSceneCollectionAsyncDefault(int index) {
+        public void UnloadSceneCollectionAsyncDefault(int index)
+        {
             UnloadSceneCollectionAsyncDefault(GetSceneCollectionAt(index, out string label));
         }
 
-        public void UnloadSceneCollectionAsyncDefault(string label) {
+        public void UnloadSceneCollectionAsyncDefault(string label)
+        {
             UnloadSceneCollectionAsyncDefault(GetSceneCollection(label, out int index));
         }
 
 #if ADDRESSABLES
-        public void UnloadSceneCollectionAsyncAddressables(string label) {
+        public void UnloadSceneCollectionAsyncAddressables(string label)
+        {
             UnloadSceneCollectionAsyncAddressables(GetSceneCollection(label, out int index));
         }
 
-        public void UnloadSceneCollectionAsyncAddressables(int index) {
+        public void UnloadSceneCollectionAsyncAddressables(int index)
+        {
             UnloadSceneCollectionAsyncAddressables(GetSceneCollectionAt(index, out string label));
         }
 #endif

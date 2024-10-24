@@ -13,6 +13,7 @@ namespace d4160.Variables
         //[SerializeField, Multiline] protected string _editorDescription;
         [SerializeField] protected T _value;
         [SerializeField, FormerlySerializedAs("_onChange")] protected EventSOBase<T> _onValueChange;
+        [SerializeField] protected bool _invokeWhenEqual = false;
 
         public override object RawValue { get => _value; set => Value = (T)value; }
         public override string StringValue { get => Value.ToString(); set => ParseValue(value); }
@@ -23,7 +24,7 @@ namespace d4160.Variables
             get => _value;
             set
             {
-                bool invokeOnChange = _value != null ? !_value.Equals(value) : value != null;
+                bool invokeOnChange = _invokeWhenEqual || (_value != null ? !_value.Equals(value) : value != null);
                 _value = value;
                 if (_onValueChange && invokeOnChange) _onValueChange.Invoke(_value);
             }

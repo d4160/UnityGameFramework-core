@@ -35,6 +35,16 @@ public class TooltipManager : MonoBehaviour
     /// </summary>
     public Vector2 tooltipOffset = new Vector2(10f, 10f);
 
+    /// <summary>
+    /// Multiplier for separation with different screens;
+    /// </summary>
+    public bool offsetScaleWithScreen = true;
+
+    /// <summary>
+    /// Multiplier for separation with different screens;
+    /// </summary>
+    public float offsetScaleFactor = 1f;
+
     private RectTransform _canvasRectTransform;
     private Tweener _hidingTween;
 
@@ -102,8 +112,23 @@ public class TooltipManager : MonoBehaviour
             _hidingTween = null;
         }
 
-        Vector2 screenPosition = GetScreenPosition(target) + tooltipOffset + triggerOffset;
+        Vector2 screenPosition = GetScreenPosition(target) + tooltipOffset + GetFixedOffset(triggerOffset);
         StartCoroutine(UpdateTooltipPosition(screenPosition, tooltipContent));
+    }
+
+    private Vector2 GetFixedOffset(Vector2 offset)
+    {
+        if (offsetScaleWithScreen)
+        {
+            Vector2 screenSizeBase = new Vector2(1920, 1080);
+
+            float factorX = Screen.width / screenSizeBase.x;
+            float factorY = Screen.height / screenSizeBase.y;
+            return new Vector2(factorX * offset.x, factorY * offset.y) * offsetScaleFactor;
+        }
+
+        return offset;
+
     }
 
     private Vector2 GetScreenPosition(GameObject target)

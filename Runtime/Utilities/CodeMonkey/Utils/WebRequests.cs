@@ -195,7 +195,7 @@ public static class WebRequests
 
             yield return unityWebRequest.SendWebRequest();
 
-            Debug.Log($"Is done: {unityWebRequest.isDone}");
+            //Debug.Log($"Is done: {unityWebRequest.isDone}");
 
 #if UNITY_EDITOR
             if (test)

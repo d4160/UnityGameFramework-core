@@ -173,25 +173,32 @@ namespace d4160.UGS.Lobbies
 
         public async Task LeaveOrDeleteLobby(bool migrateHost = false)
         {
-            if (Lobby != null)
+            try
             {
-                if (IsHost)
+                if (Lobby != null)
                 {
-                    if (migrateHost)
+                    if (IsHost)
                     {
-                        TryMigrateHost(Lobby.HostId);
+                        if (migrateHost)
+                        {
+                            TryMigrateHost(Lobby.HostId);
+                        }
+                        else
+                        {
+                            await DeleteLobbyAsync();
+                        }
                     }
                     else
                     {
-                        await DeleteLobbyAsync();
+                        await LeaveLobbyAsync();
                     }
-                }
-                else
-                {
-                    await LeaveLobbyAsync();
-                }
 
-                Lobby = null;
+                    Lobby = null;
+                }
+            }
+            catch
+            {
+
             }
         }
     }
@@ -243,5 +250,7 @@ namespace d4160.UGS.Lobbies
 
             return pData;
         }
+
+
     }
 }

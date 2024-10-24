@@ -49,7 +49,7 @@ public class ToastManager : Singleton<ToastManager>
         };
     }
 
-    public void ShowToast(string message, ToastPosition position, ToastTheme theme, float duration = 2.0f, bool isPermanent = false)
+    public void ShowToast(string message, ToastPosition position = ToastPosition.TopCenter, ToastTheme theme = ToastTheme.Dark, float duration = 2.0f, bool isPermanent = false)
     {
         GameObject toastInstance = Instantiate(toastPrefab, canvas.transform);
         Toast toastComponent = toastInstance.GetComponent<Toast>();

@@ -1,5 +1,7 @@
 using System;
+#if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
+#endif
 using UnityEngine;
 
 namespace d4160.UGS.Leaderboards.AdminAPI
@@ -26,7 +28,9 @@ namespace d4160.UGS.Leaderboards.AdminAPI
             return new GetLeaderboardsAdminGenericRequest(_leaderboardId, _offset, _limit);
         }
 
+#if ENABLE_NAUGHTY_ATTRIBUTES
         [Button]
+#endif
         public void SendRequest()
         {
             SendRequest(null);
