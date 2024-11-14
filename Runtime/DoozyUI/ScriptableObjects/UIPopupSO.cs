@@ -1,6 +1,8 @@
+using System;
 using Doozy.Runtime.UIManager.Containers;
 using Doozy.Runtime.UIManager.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace d4160.DoozyUI
@@ -34,7 +36,7 @@ namespace d4160.DoozyUI
             }
         }
 
-        public void Show(float hideDelay = 0, params string[] texts)
+        public void Show(float hideDelay = 0, UnityAction onHiddenCallback = null, params string[] texts)
         {
             if (hideDelay == 0)
             {
@@ -51,8 +53,16 @@ namespace d4160.DoozyUI
 
             Popup.SetTexts(texts);
             Popup.Show();
-        }
 
+            if (onHiddenCallback != null)
+            {
+                Popup.OnHideCallback.Event.AddListener(onHiddenCallback);
+            }
+            else
+            {
+                Popup.OnHideCallback.Event.RemoveAllListeners();
+            }
+        }
         public void Hide()
         {
             Popup.Hide();

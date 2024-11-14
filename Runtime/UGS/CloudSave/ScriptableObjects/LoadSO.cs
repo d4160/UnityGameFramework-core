@@ -6,6 +6,8 @@ using d4160.Variables;
 using System.Threading.Tasks;
 using d4160.Collections;
 using Unity.Services.CloudSave.Models;
+using Unity.Services.Core;
+using System;
 
 #if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
@@ -74,7 +76,7 @@ namespace d4160.UGS.CloudSave
             await LoadAsync();
         }
 
-        public async Task LoadAsync()
+        public async Task<bool> LoadAsync()
         {
             var keys = new HashSet<string>();
             //string log = string.Empty;
@@ -111,10 +113,17 @@ namespace d4160.UGS.CloudSave
                     }
                 }
 
-            }
-            catch (System.Exception e)
-            {
+                return true;
 
+            }
+            catch (ServicesInitializationException)
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                return false;
             }
         }
     }

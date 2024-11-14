@@ -1,5 +1,9 @@
+using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
+using Amazon.Runtime.Internal;
 using d4160.Variables;
+using System;
+
 #if ENABLE_NAUGHTY_ATTRIBUTES
 using NaughtyAttributes;
 #endif
@@ -45,7 +49,19 @@ namespace d4160.AWS.Cognito
 
         public async Task<GetUserResponse> GetUserAsync(bool forceCreateNewClient = false, bool forceCreateNewRequest = false, bool forceUpdateUserAttrs = true)
         {
-            return await _client.GetClient(forceCreateNewClient).GetUserAsync(GetRequest(forceCreateNewRequest, forceUpdateUserAttrs));
+            try
+            {
+                return await _client.GetClient(forceCreateNewClient).GetUserAsync(GetRequest(forceCreateNewRequest, forceUpdateUserAttrs));
+            }
+            catch (AmazonCognitoIdentityProviderException ex)
+            {
+                Debug.LogException(ex);
+                return null;
+            }
+            catch (HttpErrorResponseException)
+            {
+                return null;
+            }
         }
     }
 }

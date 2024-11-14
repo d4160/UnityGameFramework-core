@@ -7,14 +7,14 @@ using UnityEngine.TestTools;
 
 public class UICursorHandlerTests
 {
-    private ButtonCursorHandler _buttonCursorHandler;
+    private UIElementCursorChanger _buttonCursorHandler;
     private GameObject _gameObject;
 
     [SetUp]
     public void Setup()
     {
         _gameObject = new GameObject();
-        _buttonCursorHandler = _gameObject.AddComponent<ButtonCursorHandler>();
+        _buttonCursorHandler = _gameObject.AddComponent<UIElementCursorChanger>();
 
         // Create a mock hand cursor texture
         _buttonCursorHandler.handCursor = new Texture2D(16, 16);
